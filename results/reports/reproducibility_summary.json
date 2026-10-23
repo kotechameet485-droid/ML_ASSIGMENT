@@ -1,0 +1,97 @@
+{
+    "subset": "FD001",
+    "train_shape": [
+        20631,
+        26
+    ],
+    "test_shape": [
+        13096,
+        26
+    ],
+    "rul_shape": [
+        100,
+        1
+    ],
+    "train_unique_engines": 100,
+    "test_unique_engines": 100,
+    "rul_records_count": 100,
+    "train_missing_values": 0,
+    "test_missing_values": 0,
+    "rul_missing_values": 0,
+    "train_duplicate_rows": 0,
+    "test_duplicate_rows": 0,
+    "train_engine_cycle_duplicates": 0,
+    "test_engine_cycle_duplicates": 0,
+    "train_cycles_strictly_sequential": true,
+    "test_cycles_strictly_sequential": true,
+    "train_engine_lifespan_min": 128,
+    "train_engine_lifespan_max": 362,
+    "train_engine_lifespan_mean": 206.31,
+    "train_engine_lifespan_std": 46.3427492067573,
+    "test_engine_observed_cycles_min": 31,
+    "test_engine_observed_cycles_max": 303,
+    "test_engine_observed_cycles_mean": 130.96,
+    "rul_ground_truth_min": 7,
+    "rul_ground_truth_max": 145,
+    "rul_ground_truth_mean": 75.52,
+    "rul_alignment_valid": true,
+    "constant_sensors": [
+        "sensor_1",
+        "sensor_5",
+        "sensor_10",
+        "sensor_16",
+        "sensor_18",
+        "sensor_19"
+    ],
+    "low_variance_sensors": [
+        "sensor_6",
+        "sensor_8",
+        "sensor_13",
+        "sensor_15"
+    ],
+    "informative_sensors": [
+        "sensor_2",
+        "sensor_3",
+        "sensor_4",
+        "sensor_7",
+        "sensor_9",
+        "sensor_11",
+        "sensor_12",
+        "sensor_14",
+        "sensor_17",
+        "sensor_20",
+        "sensor_21"
+    ],
+    "sensor_variances": {
+        "sensor_1": 0.0,
+        "sensor_2": 0.2500532728983226,
+        "sensor_3": 37.59099443280496,
+        "sensor_4": 81.01088641554637,
+        "sensor_5": 2.840036917509108e-29,
+        "sensor_6": 1.9292790877285376e-06,
+        "sensor_7": 0.7833883045757074,
+        "sensor_8": 0.005038938213373842,
+        "sensor_9": 487.65356811858936,
+        "sensor_10": 0.0,
+        "sensor_11": 0.0713356785121139,
+        "sensor_12": 0.5439850063600523,
+        "sensor_13": 0.005172330435259189,
+        "sensor_14": 363.90048986553046,
+        "sensor_15": 0.001406627871778449,
+        "sensor_16": 1.203764562610672e-35,
+        "sensor_17": 2.3986669064124313,
+        "sensor_18": 0.0,
+        "sensor_19": 0.0,
+        "sensor_20": 0.032669271189088474,
+        "sensor_21": 0.011718251883038698
+    },
+    "setting_variances": {
+        "setting_1": 4.784340124242533e-06,
+        "setting_2": 8.588540885522267e-08,
+        "setting_3": 0.0
+    },
+    "constant_settings": [
+        "setting_2",
+        "setting_3"
+    ]
+}

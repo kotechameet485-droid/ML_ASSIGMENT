@@ -1,0 +1,2 @@
+model_name,test_mae,test_mse,test_rmse,test_r2,nasa_phm08_score,overestimated_engines,underestimated_engines,mean_overestimation_cycles,mean_underestimation_cycles,total_test_engines
+Tuned XGBoost Regressor (Engineered Features),13.94,345.02,18.57,0.8002,760.51,55,45,15.01,12.65,100

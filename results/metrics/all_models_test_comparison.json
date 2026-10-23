@@ -1,0 +1,42 @@
+[
+    {
+        "Model": "Model A: Mean-RUL Baseline",
+        "Feature Set": "Population Average",
+        "Test MAE": 35.9,
+        "Test RMSE": 43.07,
+        "Test R2": -0.0741,
+        "NASA PHM08 Score": 33629.2
+    },
+    {
+        "Model": "Model B1: Linear Regression (Raw)",
+        "Feature Set": "Raw Informative",
+        "Test MAE": 17.61,
+        "Test RMSE": 21.9,
+        "Test R2": 0.7223,
+        "NASA PHM08 Score": 1313.6
+    },
+    {
+        "Model": "Model B2: Linear Regression (Engineered)",
+        "Feature Set": "Rolling Dynamics",
+        "Test MAE": 16.04,
+        "Test RMSE": 19.86,
+        "Test R2": 0.7717,
+        "NASA PHM08 Score": 803.9
+    },
+    {
+        "Model": "Model C2: Random Forest (Engineered)",
+        "Feature Set": "Rolling Dynamics",
+        "Test MAE": 14.39,
+        "Test RMSE": 19.86,
+        "Test R2": 0.7717,
+        "NASA PHM08 Score": 1275.4
+    },
+    {
+        "Model": "Model D2: Tuned XGBoost Regressor (Engineered Features) (Winning)",
+        "Feature Set": "Tuned Rolling Dynamics",
+        "Test MAE": 13.94,
+        "Test RMSE": 18.57,
+        "Test R2": 0.8002,
+        "NASA PHM08 Score": 760.5
+    }
+]

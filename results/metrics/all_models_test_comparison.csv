@@ -1,0 +1,6 @@
+Model,Feature Set,Test MAE,Test RMSE,Test R2,NASA PHM08 Score
+Model A: Mean-RUL Baseline,Population Average,35.9,43.07,-0.0741,33629.2
+Model B1: Linear Regression (Raw),Raw Informative,17.61,21.9,0.7223,1313.6
+Model B2: Linear Regression (Engineered),Rolling Dynamics,16.04,19.86,0.7717,803.9
+Model C2: Random Forest (Engineered),Rolling Dynamics,14.39,19.86,0.7717,1275.4
+Model D2: Tuned XGBoost Regressor (Engineered Features) (Winning),Tuned Rolling Dynamics,13.94,18.57,0.8002,760.5

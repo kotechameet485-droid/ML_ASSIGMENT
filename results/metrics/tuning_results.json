@@ -1,0 +1,83 @@
+{
+    "RandomForest": {
+        "best_params": {
+            "n_estimators": 150,
+            "min_samples_split": 10,
+            "min_samples_leaf": 8,
+            "max_features": "sqrt",
+            "max_depth": null
+        },
+        "best_cv_rmse": 17.931998692718768,
+        "search_space": {
+            "n_estimators": [
+                "50",
+                "100",
+                "150"
+            ],
+            "max_depth": [
+                "10",
+                "15",
+                "20",
+                "None"
+            ],
+            "min_samples_split": [
+                "5",
+                "10",
+                "15"
+            ],
+            "min_samples_leaf": [
+                "2",
+                "4",
+                "8"
+            ],
+            "max_features": [
+                "sqrt",
+                "0.5",
+                "0.7"
+            ]
+        }
+    },
+    "XGBoost": {
+        "best_params": {
+            "subsample": 0.85,
+            "reg_lambda": 10.0,
+            "n_estimators": 140,
+            "max_depth": 5,
+            "learning_rate": 0.07,
+            "colsample_bytree": 0.6
+        },
+        "best_cv_rmse": 17.75307035446167,
+        "search_space": {
+            "n_estimators": [
+                "60",
+                "100",
+                "140"
+            ],
+            "max_depth": [
+                "3",
+                "5",
+                "7"
+            ],
+            "learning_rate": [
+                "0.03",
+                "0.07",
+                "0.12"
+            ],
+            "subsample": [
+                "0.7",
+                "0.85",
+                "1.0"
+            ],
+            "colsample_bytree": [
+                "0.6",
+                "0.8",
+                "1.0"
+            ],
+            "reg_lambda": [
+                "1.0",
+                "5.0",
+                "10.0"
+            ]
+        }
+    }
+}
