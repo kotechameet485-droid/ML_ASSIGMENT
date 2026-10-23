@@ -5,7 +5,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Sliders,
-  FileText,
   Activity,
   Layers,
   Info,
@@ -80,44 +79,6 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleExportReport = () => {
-    if (!prediction) return;
-    const reportText = `=====================================================
-ENGINEMIND 2.0 — TURBOFAN PREDICTIVE MAINTENANCE REPORT
-=====================================================
-Timestamp: ${prediction.timestamp}
-Dataset Subset: ${prediction.subset}
-Engine Unit: Engine #${prediction.engine_id}
-Terminal Flight Cycle Observed: ${prediction.terminal_cycle}
-
-PREDICTED REMAINING USEFUL LIFE: ${prediction.predicted_rul.toFixed(1)} CYCLES
-Model Benchmark Margin of Error: ±${prediction.margin_of_error} cycles (Test MAE)
-Evaluated Model Architecture: ${prediction.model_name}
-
-MAINTENANCE STATUS ASSESSMENT:
-Priority Level: ${prediction.priority_category}
-Recommended Operational Action: ${prediction.recommended_action}
-Configured Thresholds: Critical <= ${criticalThreshold} cycles | Warning <= ${warningThreshold} cycles
-
-EVALUATION AUDIT (NASA GROUND TRUTH):
-Ground Truth RUL: ${prediction.ground_truth_rul != null ? prediction.ground_truth_rul + ' cycles' : 'N/A'}
-Prediction Residual: ${prediction.residual != null ? (prediction.residual > 0 ? '+' : '') + prediction.residual + ' cycles' : 'N/A'}
-Residual Meaning: ${prediction.residual != null && prediction.residual > 0 ? 'Overestimation (Late)' : 'Underestimation (Conservative/Early)'}
-
-COMPLIANCE & LEGAL NOTICE:
-This prediction was generated using the EngineMind ML pipeline on NASA C-MAPSS data.
-It is an academic decision-support heuristic, not certified for primary aviation safety or airworthiness dispatch.
-=====================================================`;
-
-    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `EngineMind_Report_Engine_${prediction.engine_id}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
   };
 
   const selectedEngineMeta = engines.find((e) => e.engine_id === selectedEngineId);
@@ -320,22 +281,13 @@ It is an academic decision-support heuristic, not certified for primary aviation
           {/* Prediction Output Card */}
           {prediction && (
             <div className="bg-white border border-slate-200 rounded-lg p-5 space-y-5 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
-                    Inference Timestamp: {prediction.timestamp}
-                  </span>
-                  <h3 className="text-base font-bold text-slate-900">
-                    Engine #{prediction.engine_id} Diagnostic Assessment
-                  </h3>
-                </div>
-                <button
-                  onClick={handleExportReport}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-700 font-medium transition-colors shadow-xs"
-                >
-                  <FileText className="w-3.5 h-3.5 text-sky-600" />
-                  <span>Download Report</span>
-                </button>
+              <div className="border-b border-slate-100 pb-3">
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
+                  Inference Timestamp: {prediction.timestamp}
+                </span>
+                <h3 className="text-base font-bold text-slate-900">
+                  Engine #{prediction.engine_id} Diagnostic Assessment
+                </h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
