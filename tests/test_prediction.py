@@ -87,3 +87,37 @@ def test_no_test_labels_used_in_model():
     # Verify that model does not contain test RUL labels in its fitted attributes
     train_df, _, _ = load_raw_dataset("FD001")
     assert len(train_df) == 20631
+
+
+def test_nasa_phm08_asymmetric_score():
+    """
+    Verifies that the NASA PHM08 Prognostics score:
+    1. Returns 0 for perfect prediction (residual = 0).
+    2. Penalizes late overestimation (d > 0) more severely than early underestimation (d < 0).
+    3. Conforms to the standard formula:
+       s_i = exp(-d/13) - 1 for d < 0
+       s_i = exp(d/10) - 1  for d >= 0
+    """
+    from src.evaluate import compute_nasa_phm08_score
+
+    # 1. Perfect prediction
+    y_true_perfect = np.array([50.0, 100.0, 20.0])
+    y_pred_perfect = np.array([50.0, 100.0, 20.0])
+    score_zero = compute_nasa_phm08_score(y_true_perfect, y_pred_perfect)
+    assert abs(score_zero) < 1e-6
+
+    # 2. Equal magnitude error (10 cycles)
+    # Early prediction: y_pred = 40, y_true = 50 -> d = -10
+    score_early = compute_nasa_phm08_score(np.array([50.0]), np.array([40.0]))
+    expected_early = np.exp(10.0 / 13.0) - 1.0
+    assert abs(score_early - expected_early) < 1e-5
+
+    # Late prediction: y_pred = 60, y_true = 50 -> d = +10
+    score_late = compute_nasa_phm08_score(np.array([50.0]), np.array([60.0]))
+    expected_late = np.exp(10.0 / 10.0) - 1.0  # e^1 - 1
+    assert abs(score_late - expected_late) < 1e-5
+
+    # 3. Asymmetric penalty verification: late penalty must exceed early penalty
+    assert score_late > score_early, f"Late score {score_late} should exceed early score {score_early}"
+    assert round(score_late, 3) == 1.718
+    assert round(score_early, 3) == 1.158

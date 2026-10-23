@@ -26,7 +26,7 @@ if not exist "%VENV_PYTHON%" (
 echo [1] Launch EngineMind 2.0 (FastAPI Backend on :8000 + React Frontend on :5173) [RECOMMENDED]
 echo [2] Launch FastAPI Backend Only (http://127.0.0.1:8000)
 echo [3] Launch React Frontend Only (http://127.0.0.1:5173)
-echo [4] Execute Complete Automated Test Suite (pytest: 31 tests)
+echo [4] Execute Complete Automated Test Suite (pytest: 32 tests)
 echo [5] Run Model Training and Hyperparameter Tuning (src/train.py)
 echo [6] Run Official Test Set Evaluation (src/evaluate.py)
 echo [7] Run Legacy Streamlit Dashboard (app.py)

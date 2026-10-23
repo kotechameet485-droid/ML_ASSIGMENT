@@ -7,7 +7,7 @@
 [![Tailwind CSS 4](https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Validation](https://img.shields.io/badge/Validation-5--Fold_GroupKFold-orange.svg)]()
 [![Model](https://img.shields.io/badge/Selected_Champion-Tuned_XGBoost-blueviolet.svg)]()
-[![Tests](https://img.shields.io/badge/Pytest-31_Passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Pytest-32_Passed-brightgreen.svg)]()
 
 ---
 
