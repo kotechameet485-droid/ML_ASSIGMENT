@@ -7,7 +7,9 @@
 [![Tailwind CSS 4](https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Validation](https://img.shields.io/badge/Validation-5--Fold_GroupKFold-orange.svg)]()
 [![Model](https://img.shields.io/badge/Selected_Champion-Tuned_XGBoost-blueviolet.svg)]()
-[![Tests](https://img.shields.io/badge/Pytest-32_Passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Pytest-47_Passed-brightgreen.svg)]()
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-blue.svg)]()
+
 
 ---
 
@@ -179,7 +181,7 @@ Navigate to `http://127.0.0.1:5173/`.
 
 ## 8. Verification & Test Suite
 
-The project includes 31 automated unit and integration tests across data loading, causal feature engineering, model prediction integrity, and FastAPI REST endpoints.
+The project includes 47 automated unit and integration tests across data loading, causal feature engineering, model prediction integrity, threshold validation, and FastAPI REST endpoints.
 
 Run the entire test suite with:
 ```powershell
@@ -187,25 +189,36 @@ Run the entire test suite with:
 ```
 
 ```
-======================== 31 passed in 8.62s ========================
-tests/test_api.py::test_api_health PASSED
-tests/test_api.py::test_list_datasets PASSED
-tests/test_api.py::test_dataset_overview_fd001 PASSED
-tests/test_api.py::test_list_engines PASSED
-tests/test_api.py::test_engine_telemetry PASSED
-tests/test_api.py::test_predict_fd001_engine PASSED
-tests/test_api.py::test_predict_unsupported_subset PASSED
-tests/test_api.py::test_fleet_priority_queue PASSED
-tests/test_api.py::test_test_benchmarks PASSED
-tests/test_api.py::test_validation_benchmarks PASSED
-tests/test_api.py::test_feature_importances PASSED
-tests/test_api.py::test_sensor_catalog PASSED
-tests/test_api.py::test_error_summary PASSED
-tests/test_api.py::test_artifacts_status PASSED
-tests/test_data.py::... (6 tests passed)
+======================== 47 passed in 3.46s ========================
+tests/test_api.py::... (19 tests passed)
+  - Health check & readiness flags
+  - Dataset exploration & telemetry
+  - FD001 prediction & unsupported subset 400 rejection
+  - Threshold order validation (critical < warning enforcement)
+  - Reference MAE inclusion in prediction schema
+tests/test_data.py::... (8 tests passed)
+  - Data directory resolution & file existence
+  - Strict cycle continuity & RUL alignment
+  - Zero-variance sensor identification
+  - Independent subset availability & no-silent-fallback verification
 tests/test_features.py::... (4 tests passed)
-tests/test_prediction.py::... (6 tests passed)
+  - Engine-level group separation (GroupKFold)
+  - Backward-looking causal rolling statistics (no future leakage)
+  - RUL label construction & 125-cycle piecewise clipping
+tests/test_prediction.py::... (10 tests passed)
+  - Model serialization & artifact verification
+  - Input telemetry validation (rejects missing cols, nulls, infs, negative IDs)
+  - Threshold ordering validation in prediction & fleet queuing
+  - NASA PHM08 asymmetric score mathematical verification
+tests/test_remediation.py::... (6 tests passed)
+  - Cache immutability across repeated loads
+  - Boundary ID validation (rejects <= 0 with HTTP 404)
+  - SENSOR_METADATA authoritative alignment
+  - Evaluation artifact score alignment
 ```
+
+Continuous integration runs automatically on every commit and pull request via GitHub Actions (`.github/workflows/ci.yml`), executing both backend `pytest` tests and frontend `npm run lint` + `npm run build`.
+
 
 ---
 

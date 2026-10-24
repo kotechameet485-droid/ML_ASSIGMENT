@@ -36,14 +36,22 @@ def get_predictor():
     return _predictor
 
 
+import json
+
 @router.get("/{subset}/{engine_id}", response_model=PredictionResult)
 def predict_engine_rul(
     subset: str,
     engine_id: int,
-    critical_threshold: float = Query(25.0, ge=5.0, le=50.0),
-    warning_threshold: float = Query(60.0, ge=25.0, le=100.0)
+    critical_threshold: float = Query(25.0, ge=1.0, le=100.0),
+    warning_threshold: float = Query(60.0, ge=1.0, le=200.0)
 ):
     """Executes live inference on an engine's telemetry trajectory."""
+    if critical_threshold >= warning_threshold:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid threshold configuration: critical_threshold ({critical_threshold}) must be strictly less than warning_threshold ({warning_threshold})."
+        )
+
     meta = SUBSET_CATALOG.get(subset, {})
     if not meta.get("has_trained_model", False):
         raise HTTPException(
@@ -82,12 +90,24 @@ def predict_engine_rul(
         gt_rul = float(rul_df.iloc[engine_id - 1]["true_rul"])
         residual = round(pred_rul - gt_rul, 1)
 
+    # Source reference test MAE from verified evaluation artifact
+    ref_mae = 13.94
+    metrics_file = WORKSPACE_ROOT / "results" / "metrics" / "test_metrics.json"
+    if metrics_file.exists():
+        try:
+            with open(metrics_file, "r", encoding="utf-8") as f:
+                t_metrics = json.load(f)
+                ref_mae = float(t_metrics.get("test_mae", 13.94))
+        except Exception:
+            pass
+
     return PredictionResult(
         engine_id=engine_id,
         subset=subset,
         terminal_cycle=pred_data["last_observed_cycle"],
         predicted_rul=pred_rul,
-        margin_of_error=13.9,
+        test_mae_reference_cycles=ref_mae,
+        margin_of_error=ref_mae,
         priority_category=prio_meta["priority_level"],
         recommended_action=prio_meta["action"],
         model_name=pred_data["model_used"],
@@ -100,10 +120,16 @@ def predict_engine_rul(
 @router.get("/fleet/queue/{subset}", response_model=List[FleetPriorityItem])
 def get_fleet_priority_queue(
     subset: str,
-    critical_threshold: float = Query(25.0),
-    warning_threshold: float = Query(60.0)
+    critical_threshold: float = Query(25.0, ge=1.0, le=100.0),
+    warning_threshold: float = Query(60.0, ge=1.0, le=200.0)
 ):
     """Returns sorted fleet maintenance priority queue."""
+    if critical_threshold >= warning_threshold:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid threshold configuration: critical_threshold ({critical_threshold}) must be strictly less than warning_threshold ({warning_threshold})."
+        )
+
     if subset != "FD001":
         raise HTTPException(
             status_code=400,

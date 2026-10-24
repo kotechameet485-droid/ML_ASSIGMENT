@@ -143,3 +143,38 @@ def test_artifacts_status():
     for it in items:
         if "best_model.joblib" in it["path"] or "train_FD001.txt" in it["path"]:
             assert it["exists"] is True
+
+
+def test_predict_threshold_order_validation():
+    """Verify that critical_threshold >= warning_threshold is rejected with 422."""
+    response = client.get("/api/predictions/FD001/1?critical_threshold=60&warning_threshold=25")
+    assert response.status_code == 422
+    assert "critical_threshold" in response.json()["detail"].lower()
+
+
+def test_fleet_queue_threshold_order_validation():
+    """Verify that fleet queue validates critical_threshold < warning_threshold."""
+    response = client.get("/api/predictions/fleet/queue/FD001?critical_threshold=50&warning_threshold=30")
+    assert response.status_code == 422
+    assert "critical_threshold" in response.json()["detail"].lower()
+
+
+def test_predict_contains_test_mae_reference_cycles():
+    """Verify prediction response includes verified reference test MAE and not calibrated interval."""
+    response = client.get("/api/predictions/FD001/1")
+    assert response.status_code == 200
+    data = response.json()
+    assert "test_mae_reference_cycles" in data
+    assert abs(data["test_mae_reference_cycles"] - 13.94) < 0.1
+
+
+def test_api_health_readiness_fields():
+    """Verify health endpoint distinguishes liveness, dataset, artifact, and inference readiness."""
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["api_live"] is True
+    assert data["dataset_available"] is True
+    assert data["model_artifact_available"] is True
+    assert data["inference_ready"] is True
+    assert "status" in data

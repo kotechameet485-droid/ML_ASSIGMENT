@@ -50,7 +50,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
       id: 'overview' as ViewTab,
       label: 'Overview',
       icon: <Activity className="w-4 h-4 text-[#0F62FE]" />,
-      badge: 'PROD',
+      badge: 'SUMMARY',
     },
     {
       id: 'datasets' as ViewTab,
@@ -74,7 +74,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
       id: 'prediction' as ViewTab,
       label: 'RUL Prediction',
       icon: <Gauge className="w-4 h-4 text-[#EA580C]" />,
-      badge: currentSubset === 'FD001' ? 'READY' : 'LOCKED',
+      badge: currentSubset === 'FD001' ? 'ACTIVE' : 'EXPLORE',
     },
     {
       id: 'explainability' as ViewTab,

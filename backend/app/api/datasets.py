@@ -55,6 +55,8 @@ def get_dataset_overview(subset: str):
         
     try:
         train_df, test_df, rul_df = load_raw_dataset(subset)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=f"Dataset files for {subset} not found: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to load dataset files for {subset}: {str(e)}")
         
@@ -87,6 +89,8 @@ def list_engines(subset: str, partition: str = Query("test", pattern="^(train|te
     """Returns engine IDs and observed cycle counts for the given partition."""
     try:
         train_df, test_df, rul_df = load_raw_dataset(subset)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=f"Dataset files for {subset} not found: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading {subset}: {str(e)}")
         
@@ -123,6 +127,8 @@ def get_engine_telemetry(
 
     try:
         train_df, test_df, rul_df = load_raw_dataset(subset)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=f"Dataset files for {subset} not found: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading {subset}: {str(e)}")
         

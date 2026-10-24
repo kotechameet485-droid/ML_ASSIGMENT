@@ -23,10 +23,22 @@ if not exist "%VENV_PYTHON%" (
     exit /b 1
 )
 
+where npm >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo [WARNING] Node.js / npm was not found in PATH. Frontend startup requires Node.js 18+.
+    echo.
+)
+
+if not exist "models\best_model.joblib" (
+    echo [NOTICE] Trained model artifact (models\best_model.joblib) not found.
+    echo You can explore datasets or run Option [5] to train the XGBoost pipeline.
+    echo.
+)
+
 echo [1] Launch EngineMind 2.0 (FastAPI Backend on :8000 + React Frontend on :5173) [RECOMMENDED]
 echo [2] Launch FastAPI Backend Only (http://127.0.0.1:8000)
 echo [3] Launch React Frontend Only (http://127.0.0.1:5173)
-echo [4] Execute Complete Automated Test Suite (pytest: 32 tests)
+echo [4] Execute Complete Automated Test Suite (pytest: 47 tests)
 echo [5] Run Model Training and Hyperparameter Tuning (src/train.py)
 echo [6] Run Official Test Set Evaluation (src/evaluate.py)
 echo [7] Run Legacy Streamlit Dashboard (app.py)
@@ -36,6 +48,10 @@ set /p CHOICE="Enter choice [1-7, default=1]: "
 if "%CHOICE%"=="" set CHOICE=1
 
 if "%CHOICE%"=="1" (
+    if not exist "frontend\node_modules" (
+        echo [NOTICE] frontend\node_modules not found. Installing frontend dependencies...
+        cd frontend && call npm install && cd ..
+    )
     echo.
     echo Starting FastAPI Analytical Backend on http://127.0.0.1:8000...
     start "EngineMind 2.0 Backend [FastAPI :8000]" cmd /k "%VENV_PYTHON% -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
@@ -53,9 +69,14 @@ if "%CHOICE%"=="1" (
     echo Starting FastAPI Backend...
     "%VENV_PYTHON%" -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ) else if "%CHOICE%"=="3" (
+    if not exist "frontend\node_modules" (
+        echo [NOTICE] frontend\node_modules not found. Installing frontend dependencies...
+        cd frontend && call npm install && cd ..
+    )
     echo.
     echo Starting React Frontend...
     cd frontend && npm run dev -- --host 127.0.0.1 --port 5173
+
 ) else if "%CHOICE%"=="4" (
     echo.
     echo Running all automated tests with pytest...

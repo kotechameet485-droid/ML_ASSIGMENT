@@ -101,18 +101,31 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Model Readiness Tag */}
         {isFd001 ? (
-          <div
-            className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-linear-to-b from-white to-emerald-50/70 border border-emerald-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
-            title="Active Model: XGBoost Regressor tuned on FD001 (MAE: 13.94 cycles)"
-          >
-            <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 shrink-0">
-              <ShieldCheck className="w-3 h-3" />
-            </span>
-            <span className="font-semibold text-slate-800">Tuned XGBoost</span>
-            <span className="px-1.5 py-0.2 bg-emerald-600 text-white text-[10px] font-bold rounded-xs shadow-2xs">
-              MAE 13.94
-            </span>
-          </div>
+          health?.model_loaded ? (
+            <div
+              className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-linear-to-b from-white to-emerald-50/70 border border-emerald-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
+              title="Active Pipeline: Tuned Model on FD001 (Artifact Verified)"
+            >
+              <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 shrink-0">
+                <ShieldCheck className="w-3 h-3" />
+              </span>
+              <span className="font-semibold text-slate-800">FD001 Model</span>
+              <span className="px-1.5 py-0.2 bg-emerald-600 text-white text-[10px] font-bold rounded-xs shadow-2xs">
+                VERIFIED ACTIVE
+              </span>
+            </div>
+          ) : (
+            <div
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-linear-to-b from-white to-amber-50/70 border border-amber-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
+              title="Model artifact not yet generated or loaded"
+            >
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <span className="font-semibold text-slate-800">FD001 Model</span>
+              <span className="px-1.5 py-0.2 bg-amber-500 text-white text-[10px] font-bold rounded-xs shadow-2xs">
+                NOT LOADED
+              </span>
+            </div>
+          )
         ) : (
           <div
             className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-linear-to-b from-white to-amber-50/70 border border-amber-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
@@ -153,7 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'bg-rose-50 text-rose-800 border border-rose-200'
             }`}
           >
-            {isBackendConnected ? (health?.status === 'ok' ? 'HEALTHY' : 'ONLINE') : 'OFFLINE'}
+            {isBackendConnected ? (health?.status === 'healthy' || health?.status === 'ok' ? 'HEALTHY' : 'ONLINE') : 'OFFLINE'}
           </span>
         </div>
 

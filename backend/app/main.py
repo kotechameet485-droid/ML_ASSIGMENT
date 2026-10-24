@@ -23,12 +23,21 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Enable CORS for local development and Vite frontend
+import os
+
+# Configurable CORS origins for development and production environments
+raw_origins = os.getenv(
+    "ENGINEMIND_CORS_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000"
+)
+allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+allow_creds = "*" not in allowed_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=allowed_origins if allowed_origins else ["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=allow_creds,
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 

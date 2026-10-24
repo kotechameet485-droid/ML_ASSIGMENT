@@ -43,7 +43,8 @@ export interface PredictionResult {
   subset: string;
   terminal_cycle: number;
   predicted_rul: number;
-  margin_of_error: number;
+  test_mae_reference_cycles: number;
+  margin_of_error?: number;
   priority_category: 'CRITICAL' | 'WARNING' | 'NOMINAL';
   recommended_action: string;
   model_name: string;
@@ -148,6 +149,11 @@ export interface ArtifactStatusItem {
 
 export interface HealthStatus {
   status: string;
+  api_live?: boolean;
+  dataset_available?: boolean;
+  model_artifact_available?: boolean;
+  model_loaded_in_memory?: boolean;
+  inference_ready?: boolean;
   service: string;
   version: string;
   python_version: string;

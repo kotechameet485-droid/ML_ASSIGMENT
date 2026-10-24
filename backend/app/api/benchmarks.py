@@ -39,37 +39,60 @@ def get_test_benchmarks():
         mae_imp = f"{((baseline_mae - t_mae) / baseline_mae) * 100:.1f}%" if baseline_mae > 0 else "0.0%"
         nasa_red = f"{((baseline_nasa - t_nasa) / baseline_nasa) * 100:.1f}%" if baseline_nasa > 0 else "0.0%"
 
-        # Map validation and architectural metadata
+    # Load authoritative validation metrics mapping from model_comparison.json
+    val_map: Dict[str, Dict[str, Any]] = {}
+    val_json_file = WORKSPACE_ROOT / "results" / "metrics" / "model_comparison.json"
+    if val_json_file.exists():
+        try:
+            with open(val_json_file, "r", encoding="utf-8") as f:
+                val_data = json.load(f)
+                for item in val_data:
+                    m_key = item.get("model_name", "")
+                    val_map[m_key] = item
+        except Exception:
+            pass
+
+    for _, row in df.iterrows():
+        m_name = str(row["Model"])
+        t_mae = float(row["Test MAE"])
+        t_nasa = float(row["NASA PHM08 Score"])
+        
+        mae_imp = f"{((baseline_mae - t_mae) / baseline_mae) * 100:.1f}%" if baseline_mae > 0 else "0.0%"
+        nasa_red = f"{((baseline_nasa - t_nasa) / baseline_nasa) * 100:.1f}%" if baseline_nasa > 0 else "0.0%"
+
+        # Match corresponding validation metrics dynamically
+        matched_val = None
+        for k, v in val_map.items():
+            if k in m_name or m_name in k or (("XGBoost" in m_name) and ("XGBoost" in k)) or (("Random Forest" in m_name) and ("Random Forest (Engineered)" in k)):
+                matched_val = v
+                break
+
+        if matched_val:
+            v_mae = round(float(matched_val.get("val_mae_mean", t_mae)), 2)
+            v_rmse = round(float(matched_val.get("val_rmse_mean", float(row["Test RMSE"]))), 2)
+        else:
+            v_mae = t_mae
+            v_rmse = float(row["Test RMSE"])
+
+        # Determine architectural family and description
         if "Baseline" in m_name:
             fam = "Baseline Reference"
-            desc = "Constant population average RUL (107.9 cycles); ignores telemetry signals."
-            v_mae = 36.97
-            v_rmse = 41.67
+            desc = "Constant population average RUL; ignores telemetry signals."
         elif "Linear Regression (Raw)" in m_name:
             fam = "Linear Model (OLS)"
-            desc = "Ordinary Least Squares on 14 raw sensor snapshots without temporal memory."
-            v_mae = 17.75
-            v_rmse = 21.66
+            desc = "Ordinary Least Squares on raw sensor snapshots without temporal memory."
         elif "Linear Regression (Engineered)" in m_name:
             fam = "Regularized / Linear Dynamics"
-            desc = "Linear model leveraging 98 causal rolling window statistics (means, std, trends)."
-            v_mae = 16.11
-            v_rmse = 19.73
+            desc = "Linear model leveraging causal rolling window statistics (means, std, trends)."
         elif "Random Forest" in m_name:
             fam = "Decision Tree Ensemble (Bagging)"
-            desc = "Ensemble of 100 decorrelated decision trees capturing non-linear sensor interactions."
-            v_mae = 13.42
-            v_rmse = 18.72
+            desc = "Ensemble of decorrelated decision trees capturing non-linear sensor interactions."
         elif "XGBoost" in m_name:
             fam = "Gradient Boosted Trees (Boosting)"
-            desc = "150 gradient-boosted trees with depth 4, shrinkage 0.05, and subsampling 0.8."
-            v_mae = 12.99
-            v_rmse = 17.94
+            desc = "Gradient-boosted decision trees optimizing squared loss with regularization."
         else:
             fam = "Regression Model"
             desc = "Machine learning predictive model."
-            v_mae = t_mae
-            v_rmse = float(row["Test RMSE"])
 
         results.append(BenchmarkItem(
             model=m_name,

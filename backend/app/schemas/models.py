@@ -51,7 +51,8 @@ class PredictionResult(BaseModel):
     subset: str
     terminal_cycle: int
     predicted_rul: float
-    margin_of_error: float
+    test_mae_reference_cycles: float
+    margin_of_error: Optional[float] = None
     priority_category: str
     recommended_action: str
     model_name: str

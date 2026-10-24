@@ -32,6 +32,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const [overview, setOverview] = useState<DatasetOverview | null>(null);
   const [fleetQueue, setFleetQueue] = useState<FleetPriorityItem[]>([]);
   const [winningBenchmark, setWinningBenchmark] = useState<BenchmarkItem | null>(null);
+  const [baselineBenchmark, setBaselineBenchmark] = useState<BenchmarkItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,8 +50,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         if (!mounted) return;
         setOverview(ov);
         setFleetQueue(queue);
-        const winner = benchmarks.find((b) => b.model.includes('XGBoost')) || benchmarks[0];
+        const winner = benchmarks.find((b) => b.model.includes('Winning') || b.model.includes('Tuned') || b.model.includes('XGBoost')) || benchmarks[benchmarks.length - 1];
+        const base = benchmarks.find((b) => b.model.includes('Baseline')) || null;
         setWinningBenchmark(winner || null);
+        setBaselineBenchmark(base);
         setLoading(false);
       })
       .catch((err) => {
@@ -190,17 +193,17 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           </div>
           <div>
             <div className="text-base font-bold text-[#0F62FE] flex items-center gap-1.5">
-              <span>Tuned XGBoost Regressor</span>
+              <span>{winningBenchmark ? winningBenchmark.model : (isFd001 ? 'Tuned XGBoost Regressor' : 'None')}</span>
               <ShieldCheck className="w-4 h-4 text-[#15803D]" />
             </div>
             <div className="text-[11px] font-mono text-[#5A6570] mt-1">
               Test MAE:{' '}
               <span className="text-[#121D26] font-bold font-mono-numbers">
-                {winningBenchmark ? winningBenchmark.test_mae.toFixed(2) : '13.94'}c
+                {winningBenchmark ? `${winningBenchmark.test_mae.toFixed(2)}c` : 'Unavailable'}
               </span>{' '}
               | Score:{' '}
               <span className="text-[#121D26] font-bold font-mono-numbers">
-                {winningBenchmark ? winningBenchmark.nasa_score.toFixed(1) : '760.5'}
+                {winningBenchmark ? winningBenchmark.nasa_score.toFixed(1) : 'Unavailable'}
               </span>
             </div>
           </div>
@@ -220,16 +223,26 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           </div>
           <div>
             <div className="text-2xl font-bold font-mono-numbers text-[#15803D] flex items-baseline gap-1">
-              <span>-21.96</span>
+              <span>
+                {winningBenchmark && baselineBenchmark
+                  ? (winningBenchmark.test_rmse - baselineBenchmark.test_rmse).toFixed(2)
+                  : (winningBenchmark ? `-${(baselineBenchmark ? baselineBenchmark.test_rmse - winningBenchmark.test_rmse : 21.96).toFixed(2)}` : 'N/A')}
+              </span>
               <span className="text-xs font-normal text-[#5A6570]">RMSE cycles</span>
             </div>
             <div className="text-[11px] font-mono text-[#5A6570] mt-1">
               Mean-RUL Baseline:{' '}
-              <span className="line-through text-[#737687]">43.07</span> cycles
+              <span className="line-through text-[#737687]">
+                {baselineBenchmark ? baselineBenchmark.test_rmse.toFixed(2) : '41.67'}
+              </span> cycles
             </div>
           </div>
           <div className="flex items-center gap-1 mt-3 pt-2 border-t border-[#F1F3F5] text-[11px] font-mono text-[#15803D] font-bold">
-            <span>+61.2% Error Reduction vs Baseline</span>
+            <span>
+              {winningBenchmark?.mae_improvement_pct
+                ? `${winningBenchmark.mae_improvement_pct} MAE Reduction vs Baseline`
+                : 'Substantial Error Reduction vs Baseline'}
+            </span>
           </div>
         </div>
 
@@ -283,7 +296,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </span>
             </div>
             <span className="text-[11px] text-slate-500 font-mono">
-              Algorithm: Tuned XGBoost Regressor (125 RUL Cap)
+              Algorithm: {winningBenchmark ? winningBenchmark.model : 'Tuned Model (125 RUL Cap)'}
             </span>
           </div>
 
@@ -295,13 +308,17 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </span>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-bold font-mono-numbers text-slate-900">
-                  {winningBenchmark ? winningBenchmark.test_mae.toFixed(2) : '13.94'}
+                  {winningBenchmark ? winningBenchmark.test_mae.toFixed(2) : 'Unavailable'}
                 </span>
                 <span className="text-xs font-mono text-slate-400">cycles</span>
               </div>
               <div className="mt-2 text-[11px] font-mono text-emerald-700 flex items-center gap-1 font-medium">
                 <TrendingDown className="w-3.5 h-3.5" />
-                <span>-61.2% error reduction vs baseline</span>
+                <span>
+                  {winningBenchmark?.mae_improvement_pct
+                    ? `${winningBenchmark.mae_improvement_pct} error reduction vs baseline`
+                    : 'Verified test metric'}
+                </span>
               </div>
             </div>
 
@@ -312,12 +329,12 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </span>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-bold font-mono-numbers text-slate-900">
-                  {winningBenchmark ? winningBenchmark.test_rmse.toFixed(2) : '18.25'}
+                  {winningBenchmark ? winningBenchmark.test_rmse.toFixed(2) : 'Unavailable'}
                 </span>
                 <span className="text-xs font-mono text-slate-400">cycles</span>
               </div>
               <div className="mt-2 text-[11px] text-slate-500 font-mono">
-                Outlier penalty constrained by depth=4
+                Outlier penalty constrained by regularization
               </div>
             </div>
 
@@ -328,11 +345,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </span>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-bold font-mono-numbers text-sky-700">
-                  {winningBenchmark ? winningBenchmark.test_r2.toFixed(4) : '0.8142'}
+                  {winningBenchmark ? winningBenchmark.test_r2.toFixed(4) : 'Unavailable'}
                 </span>
               </div>
               <div className="mt-2 text-[11px] text-slate-500 font-mono">
-                High degradation correlation (81.4%)
+                Degradation variance accounted for by model
               </div>
             </div>
 
@@ -343,11 +360,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </span>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-bold font-mono-numbers text-amber-700">
-                  {winningBenchmark ? winningBenchmark.nasa_score.toFixed(1) : '488.2'}
+                  {winningBenchmark ? winningBenchmark.nasa_score.toFixed(1) : 'Unavailable'}
                 </span>
               </div>
               <div className="mt-2 text-[11px] font-mono text-emerald-700 font-medium">
-                -97.7% penalty reduction vs baseline
+                {winningBenchmark?.nasa_reduction_pct
+                  ? `${winningBenchmark.nasa_reduction_pct} penalty reduction vs baseline`
+                  : 'Asymmetric risk evaluated'}
               </div>
             </div>
           </div>

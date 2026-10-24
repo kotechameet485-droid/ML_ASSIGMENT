@@ -28,6 +28,46 @@ DEFAULT_CRITICAL_THRESHOLD = 25.0
 DEFAULT_WARNING_THRESHOLD = 60.0
 
 
+def compute_maintenance_priority(
+    predicted_rul: float,
+    critical_thresh: float = DEFAULT_CRITICAL_THRESHOLD,
+    warning_thresh: float = DEFAULT_WARNING_THRESHOLD,
+    critical_threshold: Optional[float] = None,
+    warning_threshold: Optional[float] = None
+) -> Dict[str, str]:
+    """
+    Assigns heuristic maintenance priority category based on predicted RUL.
+    NOTE: These thresholds are demonstrative operational heuristics for research
+    and benchmark exploration, not certified aviation airworthiness limits.
+    """
+    c_thresh = critical_threshold if critical_threshold is not None else critical_thresh
+    w_thresh = warning_threshold if warning_threshold is not None else warning_thresh
+
+    if c_thresh >= w_thresh:
+        raise ValueError(
+            f"critical_threshold ({c_thresh}) must be strictly less than warning_threshold ({w_thresh})."
+        )
+
+    if predicted_rul <= c_thresh:
+        return {
+            "priority_level": "CRITICAL",
+            "action": "Immediate Depot Overhaul Required (Heuristic Rule)",
+            "color_code": "red"
+        }
+    elif predicted_rul <= w_thresh:
+        return {
+            "priority_level": "WARNING",
+            "action": "Schedule Inspection Within Next Operating Block (Heuristic Rule)",
+            "color_code": "amber"
+        }
+    else:
+        return {
+            "priority_level": "NOMINAL",
+            "action": "Routine Operational Monitoring Band (Heuristic Rule)",
+            "color_code": "green"
+        }
+
+
 class EngineMindPredictor:
     """
     Reusable inference engine for EngineMind.
@@ -58,6 +98,8 @@ class EngineMindPredictor:
         - Required columns presence
         - Numeric data types
         - No null/missing values
+        - No infinite or non-finite values
+        - Positive engine_id and cycle values
         - Monotonic cycle sequence per engine
         """
         if not isinstance(df, pd.DataFrame):
@@ -72,6 +114,20 @@ class EngineMindPredictor:
         if null_count > 0:
             raise ValueError(f"Telemetry contains {null_count} null or missing values. All sensor values must be numeric.")
             
+        # Check non-finite values
+        try:
+            arr = df[ALL_COLUMNS].to_numpy(dtype=float)
+            if np.isinf(arr).any():
+                raise ValueError("Telemetry contains infinite or non-finite numerical values.")
+        except (ValueError, TypeError) as e:
+            raise ValueError(f"Telemetry contains non-numeric data: {e}")
+
+        # Check positive bounds
+        if (df["engine_id"] <= 0).any():
+            raise ValueError("Engine IDs must be positive integers.")
+        if (df["cycle"] <= 0).any():
+            raise ValueError("Cycles must be positive integers.")
+
         # Check monotonicity
         for eid, grp in df.groupby("engine_id"):
             if not grp["cycle"].is_monotonic_increasing:
@@ -81,38 +137,40 @@ class EngineMindPredictor:
         self,
         predicted_rul: float,
         critical_thresh: float = DEFAULT_CRITICAL_THRESHOLD,
-        warning_thresh: float = DEFAULT_WARNING_THRESHOLD
+        warning_thresh: float = DEFAULT_WARNING_THRESHOLD,
+        critical_threshold: Optional[float] = None,
+        warning_threshold: Optional[float] = None
     ) -> Dict[str, str]:
-        """
-        Assigns heuristic maintenance priority category based on predicted RUL.
-        """
-        if predicted_rul <= critical_thresh:
-            return {
-                "priority_level": "CRITICAL",
-                "action": "Immediate Depot Overhaul Required",
-                "color_code": "red"
-            }
-        elif predicted_rul <= warning_thresh:
-            return {
-                "priority_level": "WARNING",
-                "action": "Schedule Maintenance Inspection Within Next Flight Block",
-                "color_code": "amber"
-            }
-        else:
-            return {
-                "priority_level": "NOMINAL",
-                "action": "Routine Operational Monitoring",
-                "color_code": "green"
-            }
+        """Delegates to module-level compute_maintenance_priority."""
+        return compute_maintenance_priority(
+            predicted_rul=predicted_rul,
+            critical_thresh=critical_thresh,
+            warning_thresh=warning_thresh,
+            critical_threshold=critical_threshold,
+            warning_threshold=warning_threshold
+        )
+
 
     def predict_engine_trajectory(
         self,
-        trajectory_df: pd.DataFrame
+        trajectory_df: pd.DataFrame,
+        critical_thresh: float = DEFAULT_CRITICAL_THRESHOLD,
+        warning_thresh: float = DEFAULT_WARNING_THRESHOLD,
+        critical_threshold: Optional[float] = None,
+        warning_threshold: Optional[float] = None
     ) -> Dict[str, Any]:
         """
         Predicts Remaining Useful Life for a single engine's trajectory at its
         latest observed cycle.
         """
+        c_thresh = critical_threshold if critical_threshold is not None else critical_thresh
+        w_thresh = warning_threshold if warning_threshold is not None else warning_thresh
+
+        if c_thresh >= w_thresh:
+            raise ValueError(
+                f"critical_threshold ({c_thresh}) must be strictly less than warning_threshold ({w_thresh})."
+            )
+
         self.validate_input_data(trajectory_df)
         
         # Build causal rolling features across the engine trajectory
@@ -130,7 +188,12 @@ class EngineMindPredictor:
         raw_pred = float(self.model.predict(X_scaled)[0])
         bounded_pred = max(0.0, raw_pred)
         
-        priority = self.compute_maintenance_priority(bounded_pred)
+        priority = self.compute_maintenance_priority(
+            bounded_pred,
+            critical_thresh=c_thresh,
+            warning_thresh=w_thresh
+        )
+
         
         return {
             "engine_id": engine_id,
@@ -143,12 +206,24 @@ class EngineMindPredictor:
 
     def predict_fleet(
         self,
-        fleet_df: pd.DataFrame
+        fleet_df: pd.DataFrame,
+        critical_thresh: float = DEFAULT_CRITICAL_THRESHOLD,
+        warning_thresh: float = DEFAULT_WARNING_THRESHOLD,
+        critical_threshold: Optional[float] = None,
+        warning_threshold: Optional[float] = None
     ) -> pd.DataFrame:
         """
         Predicts RUL for all engines in a fleet DataFrame.
         Returns tabular DataFrame of engine_id, final_cycle, predicted_rul, and priority.
         """
+        c_thresh = critical_threshold if critical_threshold is not None else critical_thresh
+        w_thresh = warning_threshold if warning_threshold is not None else warning_thresh
+
+        if c_thresh >= w_thresh:
+            raise ValueError(
+                f"critical_threshold ({c_thresh}) must be strictly less than warning_threshold ({w_thresh})."
+            )
+
         self.validate_input_data(fleet_df)
         engineered_df = build_engineered_features(fleet_df)
         latest_fleet = engineered_df.groupby("engine_id").last().reset_index()
@@ -160,7 +235,12 @@ class EngineMindPredictor:
         results = []
         for i, (_, row) in enumerate(latest_fleet.iterrows()):
             rul = float(bounded_preds[i])
-            prio = self.compute_maintenance_priority(rul)
+            prio = self.compute_maintenance_priority(
+                rul,
+                critical_thresh=c_thresh,
+                warning_thresh=w_thresh
+            )
+
             results.append({
                 "engine_id": int(row["engine_id"]),
                 "last_observed_cycle": int(row["cycle"]),

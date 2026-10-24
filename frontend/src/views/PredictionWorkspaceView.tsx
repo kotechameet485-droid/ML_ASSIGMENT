@@ -240,11 +240,17 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
                     max="45"
                     step="5"
                     value={criticalThreshold}
-                    onChange={(e) => setCriticalThreshold(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setCriticalThreshold(val);
+                      if (val >= warningThreshold) {
+                        setWarningThreshold(val + 5);
+                      }
+                    }}
                     className="w-full accent-red-600 cursor-pointer"
                   />
                   <p className="text-[11px] text-slate-500 leading-tight">
-                    Mandates immediate aircraft grounding and engine removal for depot shop overhaul.
+                    Heuristic rule: suggests prompt depot inspection when projected RUL falls within this band.
                   </p>
                 </div>
 
@@ -260,15 +266,21 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
                   </div>
                   <input
                     type="range"
-                    min="35"
+                    min="30"
                     max="85"
                     step="5"
                     value={warningThreshold}
-                    onChange={(e) => setWarningThreshold(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setWarningThreshold(val);
+                      if (val <= criticalThreshold) {
+                        setCriticalThreshold(Math.max(5, val - 5));
+                      }
+                    }}
                     className="w-full accent-amber-600 cursor-pointer"
                   />
                   <p className="text-[11px] text-slate-500 leading-tight">
-                    Flags engine for borescope inspection during next turnaround block.
+                    Heuristic rule: flags engine for scheduled turnaround inspection in the upcoming flight block.
                   </p>
                 </div>
               </div>
@@ -308,7 +320,13 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
                     <span className="text-xs font-mono text-slate-500 ml-1.5">cycles</span>
                   </div>
                   <div className="text-[11px] font-mono text-slate-500 border-t border-slate-200 pt-1.5">
-                    Uncertainty Margin: <span className="text-slate-800 font-semibold">±13.9 cycles</span> (Test MAE)
+                    Benchmark Reference MAE:{' '}
+                    <span className="text-slate-800 font-semibold">
+                      ±{(prediction.test_mae_reference_cycles ?? prediction.margin_of_error ?? 13.94).toFixed(1)} cycles
+                    </span>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
+                      (Test fleet average error; not a calibrated confidence interval)
+                    </div>
                   </div>
                 </div>
 
@@ -347,18 +365,18 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
                 {/* Leading Indicator */}
                 <div className="bg-slate-50 border border-slate-200 rounded-md p-4 flex flex-col justify-between">
                   <span className="text-[11px] font-mono text-slate-500 uppercase font-semibold">
-                    Key Degradation Signature
+                    Model & Sensor Dynamics
                   </span>
                   <div className="my-1.5 space-y-1 text-xs">
-                    <div className="text-amber-800 font-bold font-mono">
-                      Sensor 4 (LPT Outlet Temp T50)
+                    <div className="text-slate-800 font-bold font-mono">
+                      {prediction.model_name}
                     </div>
                     <p className="text-[11px] text-slate-500 leading-tight">
-                      Rolling 5-cycle mean shows elevated exhaust temperature, pulling predicted RUL downward.
+                      Causal rolling-window features (means, std, drift) across informative HPC/LPT telemetry channels evaluate degradation rate.
                     </p>
                   </div>
                   <div className="text-[11px] font-mono text-slate-500 border-t border-slate-200 pt-1.5">
-                    Architecture: <span className="text-sky-700 font-semibold">{prediction.model_name}</span>
+                    Terminal Observed Cycle: <span className="text-sky-700 font-semibold">{prediction.terminal_cycle}</span>
                   </div>
                 </div>
               </div>
@@ -396,7 +414,7 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
 
                       <div className="p-3 bg-slate-50 rounded border border-slate-200">
                         <span className="text-slate-400 block text-[10px] font-semibold">
-                          RESIDUAL (ERROR):
+                          RESIDUAL (PREDICTED - TRUE):
                         </span>
                         <span
                           className={`text-lg font-bold font-mono-numbers ${
@@ -413,13 +431,13 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
 
                       <div className="p-3 bg-slate-50 rounded border border-slate-200">
                         <span className="text-slate-400 block text-[10px] font-semibold">
-                          CLASSIFICATION:
+                          ERROR ORIENTATION:
                         </span>
                         <span className="text-xs font-semibold text-slate-800">
                           {prediction.residual != null
                             ? prediction.residual > 0
-                              ? 'Overestimated (Late Failure Warning)'
-                              : 'Underestimated (Conservative / Early Safe)'
+                              ? 'Overestimated (Later Maintenance Horizon)'
+                              : 'Underestimated (Earlier Maintenance Horizon)'
                             : 'N/A'}
                         </span>
                       </div>

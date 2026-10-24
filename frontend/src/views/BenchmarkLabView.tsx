@@ -56,6 +56,8 @@ export const BenchmarkLabView: React.FC = () => {
 
   const modelA = testBenchmarks[modelAIndex] || testBenchmarks[0];
   const modelB = testBenchmarks[modelBIndex] || testBenchmarks[testBenchmarks.length - 1];
+  const winningTest = testBenchmarks.find((b) => b.model.includes('Winning') || b.model.includes('Tuned') || b.model.includes('XGBoost')) || testBenchmarks[testBenchmarks.length - 1];
+  const winningVal = valBenchmarks.find((v) => v.model_name.includes('XGBoost') || v.model_name.includes('Random Forest (Engineered)')) || valBenchmarks[valBenchmarks.length - 1];
 
   // Head-to-head calculations
   const deltaMae = modelA.test_mae - modelB.test_mae;
@@ -515,7 +517,7 @@ export const BenchmarkLabView: React.FC = () => {
               <strong className="text-slate-900">Ranking Metric:</strong> Candidate models were ranked primarily by mean Validation MAE across 5-fold engine-grouped cross-validation on the 100 training engines.
             </p>
             <p>
-              <strong className="text-slate-900">Winning Pipeline:</strong> Tuned XGBoost with 98 rolling features achieved the lowest validation MAE (<strong>12.99 cycles</strong>), confirmed on the 100 unseen blind test engines (Test MAE <strong>13.94 cycles</strong>, $R^2$ <strong>0.8142</strong>, NASA Score <strong>488.2</strong>).
+              <strong className="text-slate-900">Winning Pipeline:</strong> {winningTest?.model || 'Tuned XGBoost with 98 rolling features'} achieved the lowest validation MAE (<strong>{winningVal ? `${winningVal.val_mae_mean.toFixed(2)} cycles` : '12.99 cycles'}</strong>), confirmed on the 100 unseen blind test engines (Test MAE <strong>{winningTest ? `${winningTest.test_mae.toFixed(2)} cycles` : '13.94 cycles'}</strong>, $R^2$ <strong>{winningTest ? winningTest.test_r2.toFixed(4) : '0.8142'}</strong>, NASA Score <strong>{winningTest ? winningTest.nasa_score.toFixed(1) : '760.5'}</strong>).
             </p>
             <p className="text-[11px] text-slate-400 pt-2 border-t border-slate-100 font-mono">
               At no point was test set ground truth accessed for model selection or hyperparameter tuning.

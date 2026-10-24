@@ -121,3 +121,61 @@ def test_nasa_phm08_asymmetric_score():
     assert score_late > score_early, f"Late score {score_late} should exceed early score {score_early}"
     assert round(score_late, 3) == 1.718
     assert round(score_early, 3) == 1.158
+
+
+def test_infinite_value_raises_error():
+    predictor = EngineMindPredictor()
+    bad_df = pd.DataFrame({
+        "engine_id": [1],
+        "cycle": [1],
+        "setting_1": [0.0], "setting_2": [0.0], "setting_3": [100.0],
+        **{f"sensor_{i}": [np.inf if i == 5 else 10.0] for i in range(1, 22)}
+    })
+    with pytest.raises(ValueError, match="non-finite"):
+        predictor.predict_engine_trajectory(bad_df)
+
+
+def test_invalid_engine_id_or_cycle_raises_error():
+    predictor = EngineMindPredictor()
+    # Negative engine id
+    bad_engine = pd.DataFrame({
+        "engine_id": [-1],
+        "cycle": [1],
+        "setting_1": [0.0], "setting_2": [0.0], "setting_3": [100.0],
+        **{f"sensor_{i}": [10.0] for i in range(1, 22)}
+    })
+    with pytest.raises(ValueError, match="positive integers"):
+        predictor.predict_engine_trajectory(bad_engine)
+
+    # Zero cycle
+    bad_cycle = pd.DataFrame({
+        "engine_id": [1],
+        "cycle": [0],
+        "setting_1": [0.0], "setting_2": [0.0], "setting_3": [100.0],
+        **{f"sensor_{i}": [10.0] for i in range(1, 22)}
+    })
+    with pytest.raises(ValueError, match="positive integers"):
+        predictor.predict_engine_trajectory(bad_cycle)
+
+
+
+def test_threshold_ordering_validation_raises_error():
+    from src.predict import compute_maintenance_priority, EngineMindPredictor
+    # Inverted thresholds
+    with pytest.raises(ValueError, match="critical_threshold .* must be strictly less"):
+        compute_maintenance_priority(30.0, critical_threshold=60, warning_threshold=25)
+
+    # Equal thresholds
+    with pytest.raises(ValueError, match="critical_threshold .* must be strictly less"):
+        compute_maintenance_priority(30.0, critical_threshold=40, warning_threshold=40)
+
+    predictor = EngineMindPredictor()
+    _, test_df, _ = load_raw_dataset("FD001")
+    eng_df = test_df[test_df["engine_id"] == 1]
+
+    with pytest.raises(ValueError, match="critical_threshold .* must be strictly less"):
+        predictor.predict_engine_trajectory(eng_df, critical_threshold=50, warning_threshold=30)
+
+    with pytest.raises(ValueError, match="critical_threshold .* must be strictly less"):
+        predictor.predict_fleet(eng_df, critical_threshold=50, warning_threshold=50)
+

@@ -7,7 +7,8 @@ import os
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Tuple, List, Optional, Any
+from typing import Dict, Tuple, List, Optional, Any, Union
+
 import numpy as np
 import pandas as pd
 
@@ -105,7 +106,7 @@ def resolve_data_directory(custom_path: Optional[str] = None) -> Path:
     ])
 
     for path in candidates:
-        if path.exists() and (path / "train_FD001.txt").exists():
+        if path.exists() and any((path / f"train_{s}.txt").exists() for s in ["FD001", "FD002", "FD003", "FD004"]):
             return path.resolve()
 
     raise FileNotFoundError(
@@ -113,17 +114,80 @@ def resolve_data_directory(custom_path: Optional[str] = None) -> Path:
     )
 
 
-def get_available_subsets(data_dir: Optional[str] = None) -> List[str]:
-    """Scans dataset directory and returns list of subsets with complete files."""
+def check_subset_availability(subset: str, data_dir: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """
+    Independently inspects availability of train, test, and RUL files for a specific subset.
+    """
     try:
-        resolved = resolve_data_directory(data_dir)
+        resolved = Path(data_dir) if data_dir else resolve_data_directory()
+        if not resolved.exists():
+            return {
+                "subset": subset,
+                "resolved_dir": str(resolved),
+                "exists": False,
+                "train_file_exists": False,
+                "test_file_exists": False,
+                "rul_file_exists": False,
+                "is_complete": False,
+                "is_valid": False,
+            }
+        train_exists = (resolved / f"train_{subset}.txt").exists()
+        test_exists = (resolved / f"test_{subset}.txt").exists()
+        rul_exists = (resolved / f"RUL_{subset}.txt").exists()
+        is_complete = bool(train_exists and test_exists and rul_exists)
+        return {
+            "subset": subset,
+            "resolved_dir": str(resolved),
+            "exists": is_complete,
+            "train_exists": train_exists,
+            "test_exists": test_exists,
+            "rul_exists": rul_exists,
+            "train_file_exists": train_exists,
+            "test_file_exists": test_exists,
+            "rul_file_exists": rul_exists,
+            "is_complete": is_complete,
+            "is_valid": is_complete,
+        }
+    except Exception as e:
+        return {
+            "subset": subset,
+            "resolved_dir": None,
+            "exists": False,
+            "train_exists": False,
+            "test_exists": False,
+            "rul_exists": False,
+            "train_file_exists": False,
+            "test_file_exists": False,
+            "rul_file_exists": False,
+            "is_complete": False,
+            "is_valid": False,
+            "error": str(e)
+        }
+
+
+
+def get_available_subsets(data_dir: Optional[Union[str, Path]] = None) -> List[str]:
+    """
+    Scans dataset directory and returns list of subsets with complete files
+    (train, test, and RUL all present). Never silently defaults to FD001.
+    """
+    try:
+        resolved = Path(data_dir) if data_dir else resolve_data_directory()
+        if not resolved.exists():
+            return []
         subsets = []
         for s in ["FD001", "FD002", "FD003", "FD004"]:
-            if (resolved / f"train_{s}.txt").exists() and (resolved / f"test_{s}.txt").exists():
+            if (
+                (resolved / f"train_{s}.txt").exists()
+                and (resolved / f"test_{s}.txt").exists()
+                and (resolved / f"RUL_{s}.txt").exists()
+            ):
                 subsets.append(s)
         return subsets
-    except Exception:
-        return ["FD001"]
+    except Exception as e:
+        logger.warning(f"Dataset directory discovery failed: {e}. No subsets marked available.")
+        return []
+
 
 
 from functools import lru_cache

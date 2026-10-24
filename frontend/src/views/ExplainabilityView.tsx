@@ -81,7 +81,7 @@ export const ExplainabilityView: React.FC = () => {
           </div>
           <div className="hidden sm:flex items-center gap-1.5 text-[#737687] font-mono text-[10px] shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]" />
-            <span>TreeSHAP v0.42 Certified</span>
+            <span>TreeSHAP Attribution</span>
           </div>
         </div>
       </div>

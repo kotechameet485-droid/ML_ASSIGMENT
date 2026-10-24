@@ -84,3 +84,26 @@ def test_available_subsets_and_catalog():
     assert len(SUBSET_CATALOG) == 4
     assert SUBSET_CATALOG["FD001"]["has_trained_model"] is True
     assert SUBSET_CATALOG["FD002"]["has_trained_model"] is False
+
+
+def test_get_available_subsets_empty_dir_no_silent_fallback(tmp_path):
+    """Verify that get_available_subsets returns [] for an empty dir without falling back to FD001."""
+    from src.data_loader import get_available_subsets
+    subsets = get_available_subsets(data_dir=tmp_path)
+    assert subsets == [], "get_available_subsets must not falsely report FD001 when files are missing"
+
+
+def test_check_subset_availability():
+    """Verify check_subset_availability correctly audits individual subset files."""
+    from src.data_loader import check_subset_availability
+    avail_fd001 = check_subset_availability("FD001")
+    assert avail_fd001["exists"] is True
+    assert avail_fd001["train_exists"] is True
+    assert avail_fd001["test_exists"] is True
+    assert avail_fd001["rul_exists"] is True
+    assert avail_fd001["is_valid"] is True
+
+    avail_invalid = check_subset_availability("FD999")
+    assert avail_invalid["exists"] is False
+    assert avail_invalid["is_valid"] is False
+

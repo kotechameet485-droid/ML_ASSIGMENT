@@ -141,7 +141,7 @@ export const ErrorDiagnosticsView: React.FC = () => {
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#737687] font-bold">
-                  Asymmetric Bias (Safe vs Late)
+                  Directional Bias (Early vs Late)
                 </span>
                 <div className="text-xl font-bold font-mono-numbers text-[#121D26] mt-1 flex items-baseline gap-2">
                   <span className="text-emerald-700">{summary.underestimated_count} Early</span>
@@ -150,12 +150,12 @@ export const ErrorDiagnosticsView: React.FC = () => {
                 </div>
               </div>
               <span className="px-1.5 py-0.5 rounded bg-[#F0FDF4] text-[#15803D] text-[10px] font-mono font-bold border border-[#BBF7D0]">
-                SAFE BIAS
+                EARLY BIAS
               </span>
             </div>
             <div className="text-[11px] font-mono text-[#15803D] mt-3 pt-2 border-t border-[#F1F3F5] font-semibold flex items-center justify-between">
               <span>Mean Residual: {summary.mean_residual.toFixed(2)}c</span>
-              <span>(Conservative)</span>
+              <span>(Earlier Horizon)</span>
             </div>
           </div>
 
@@ -205,8 +205,8 @@ export const ErrorDiagnosticsView: React.FC = () => {
           </div>
 
           <div className="flex justify-between text-xs font-mono text-slate-500 pt-2 border-t border-slate-100">
-            <span className="text-emerald-700 font-medium">Under: Safe Early Inspection</span>
-            <span className="text-red-700 font-medium">Over: Unsafe Late Failure</span>
+            <span className="text-emerald-700 font-medium">Under: Earlier Maintenance Scheduling</span>
+            <span className="text-red-700 font-medium">Over: Delayed Maintenance Risk</span>
           </div>
         </div>
 

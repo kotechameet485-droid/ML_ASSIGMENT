@@ -56,17 +56,34 @@ def get_artifacts_status():
 
 @router.get("/health")
 def health_check() -> Dict[str, Any]:
-    """Returns application health and runtime environment details."""
+    """Returns application health, liveness, dataset status, and inference readiness."""
     model_path = WORKSPACE_ROOT / "models" / "best_model.joblib"
+    data_path = WORKSPACE_ROOT / "data" / "train_FD001.txt"
+    test_data_path = WORKSPACE_ROOT / "data" / "test_FD001.txt"
     
+    model_artifact_exists = model_path.exists()
+    dataset_exists = data_path.exists()
+    inference_ready = model_artifact_exists and test_data_path.exists()
+
+    # Check memory load state without forcing cold load
+    from backend.app.api import predictions
+    in_memory = predictions._predictor is not None
+
+    status_str = "healthy" if (dataset_exists and model_artifact_exists) else "degraded"
+
     return {
-        "status": "healthy",
+        "status": status_str,
+        "api_live": True,
+        "dataset_available": dataset_exists,
+        "model_artifact_available": model_artifact_exists,
+        "model_loaded_in_memory": in_memory,
+        "inference_ready": inference_ready,
         "service": "EngineMind 2.0 Analytical API",
         "version": "2.0.0",
         "python_version": platform.python_version(),
         "platform": platform.platform(),
         "workspace_root": str(WORKSPACE_ROOT),
-        "model_loaded": model_path.exists(),
-        "model_file_size_bytes": model_path.stat().st_size if model_path.exists() else 0,
+        "model_loaded": model_artifact_exists,
+        "model_file_size_bytes": model_path.stat().st_size if model_artifact_exists else 0,
         "timestamp": datetime.now().isoformat()
     }
