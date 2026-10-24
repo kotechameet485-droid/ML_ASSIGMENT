@@ -49,55 +49,55 @@ const SidebarContent: React.FC<SidebarProps> = ({
     {
       id: 'overview' as ViewTab,
       label: 'Overview',
-      icon: <Activity className="w-4 h-4 text-[#60A5FA]" />,
+      icon: <Activity className="w-4 h-4 text-[#0F62FE]" />,
       badge: 'PROD',
     },
     {
       id: 'datasets' as ViewTab,
       label: 'Dataset Explorer',
-      icon: <FolderArchive className="w-4 h-4 text-[#38BDF8]" />,
+      icon: <FolderArchive className="w-4 h-4 text-[#0284C7]" />,
       badge: currentSubset,
     },
     {
       id: 'explorer' as ViewTab,
       label: 'Fleet Explorer',
-      icon: <Layers className="w-4 h-4 text-[#818CF8]" />,
+      icon: <Layers className="w-4 h-4 text-[#6366F1]" />,
       badge: null,
     },
     {
       id: 'benchmarks' as ViewTab,
       label: 'Model Laboratory',
-      icon: <Scale className="w-4 h-4 text-[#A78BFA]" />,
+      icon: <Scale className="w-4 h-4 text-[#8B5CF6]" />,
       badge: '4 Models',
     },
     {
       id: 'prediction' as ViewTab,
       label: 'RUL Prediction',
-      icon: <Gauge className="w-4 h-4 text-[#F472B6]" />,
+      icon: <Gauge className="w-4 h-4 text-[#EA580C]" />,
       badge: currentSubset === 'FD001' ? 'READY' : 'LOCKED',
     },
     {
       id: 'explainability' as ViewTab,
       label: 'Explainability',
-      icon: <BrainCircuit className="w-4 h-4 text-[#34D399]" />,
+      icon: <BrainCircuit className="w-4 h-4 text-[#16A34A]" />,
       badge: 'TreeSHAP',
     },
     {
       id: 'errors' as ViewTab,
       label: 'Error Analysis',
-      icon: <AlertTriangle className="w-4 h-4 text-[#FBBF24]" />,
+      icon: <AlertTriangle className="w-4 h-4 text-[#DC2626]" />,
       badge: '100 Units',
     },
   ];
 
   return (
-    <div className="flex flex-1 flex-col justify-between h-full overflow-hidden">
+    <div className="flex flex-1 flex-col justify-between h-full overflow-hidden text-slate-800">
       <div className="flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
         {/* Brand Header */}
-        <div className="h-14 flex items-center justify-between border-b border-[#1D2935] pb-2 px-1">
+        <div className="h-14 flex items-center justify-between border-b border-[#DDE2E5] pb-2 px-1">
           <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
-            <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded bg-[#1D2935] border border-[#273747]">
-              <EngineMindLogo className="h-5 w-5" inverted={true} />
+            <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded bg-[#F8F9FA] border border-[#DDE2E5] shadow-xs">
+              <EngineMindLogo className="h-5 w-5" inverted={false} />
             </div>
 
             <motion.div
@@ -109,14 +109,14 @@ const SidebarContent: React.FC<SidebarProps> = ({
               className="flex-col min-w-0"
             >
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm tracking-tight text-[#F8FAFC] leading-none">
+                <span className="font-bold text-sm tracking-tight text-[#121D26] leading-none">
                   EngineMind
                 </span>
-                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#1D2935] text-[#94A3B8] border border-[#273747] font-semibold">
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#F1F3F5] text-slate-700 border border-[#DDE2E5] font-bold">
                   v2.4
                 </span>
               </div>
-              <span className="text-[9px] font-mono text-slate-400 truncate leading-tight mt-0.5">
+              <span className="text-[9px] font-mono text-slate-500 truncate leading-tight mt-0.5">
                 Predictive Maintenance Intelligence
               </span>
             </motion.div>
@@ -130,12 +130,12 @@ const SidebarContent: React.FC<SidebarProps> = ({
             opacity: open ? 1 : 0,
           }}
           transition={{ duration: 0.15 }}
-          className="pt-4 pb-2 px-1 flex items-center justify-between"
+          className="pt-3 pb-1.5 px-1 flex items-center justify-between"
         >
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
             Diagnostic Suites
           </span>
-          <span className="text-[9px] font-mono text-slate-600">NASA C-MAPSS</span>
+          <span className="text-[9px] font-mono text-slate-400">NASA C-MAPSS</span>
         </motion.div>
 
         {/* Primary Navigation List */}
@@ -156,7 +156,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Footer Section: Active Context & Health Indicator */}
-      <div className="pt-3 border-t border-[#1D2935] flex flex-col gap-2 mt-auto">
+      <div className="pt-3 border-t border-[#DDE2E5] flex flex-col gap-2 mt-auto">
         {/* Active Context Card (Expanded only) */}
         <motion.div
           animate={{
@@ -164,23 +164,23 @@ const SidebarContent: React.FC<SidebarProps> = ({
             opacity: open ? 1 : 0,
           }}
           transition={{ duration: 0.15 }}
-          className="flex-col bg-[#16202A] border border-[#1D2935] rounded-md p-2.5 text-xs font-mono space-y-1"
+          className="flex-col bg-[#F8F9FA] border border-[#DDE2E5] rounded-md p-2.5 text-xs font-mono space-y-1 shadow-2xs"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+            <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
               Active Context
             </span>
-            <span className="text-[10px] text-[#38BDF8] font-bold flex items-center gap-1">
+            <span className="text-[10px] text-[#0F62FE] font-bold flex items-center gap-1">
               <Database className="w-2.5 h-2.5" />
               {currentSubset}
             </span>
           </div>
-          <p className="text-[11px] text-[#F8FAFC] font-semibold leading-tight">
+          <p className="text-[11px] text-slate-900 font-semibold leading-tight">
             {currentSubset === 'FD001'
               ? 'FD001 (Sea-Level Single)'
               : `${currentSubset} (Multi-Condition)`}
           </p>
-          <p className="text-[10px] text-slate-400">
+          <p className="text-[10px] text-slate-500">
             {currentSubset === 'FD001' ? '100 Train / 100 Test Units' : 'Exploration Telemetry'}
           </p>
         </motion.div>
@@ -188,7 +188,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
         {/* Live Backend Connection Indicator */}
         <div
           className={cn(
-            'flex items-center rounded-md border border-[#1D2935] bg-[#16202A] transition-all',
+            'flex items-center rounded-md border border-[#DDE2E5] bg-[#F8F9FA] transition-all shadow-2xs',
             open ? 'justify-between px-2.5 py-1.5' : 'justify-center p-2'
           )}
           title={
@@ -202,13 +202,13 @@ const SidebarContent: React.FC<SidebarProps> = ({
               <span
                 className={cn(
                   'animate-ping absolute inline-flex h-full w-full rounded-full opacity-75',
-                  isBackendConnected ? 'bg-[#22C55E]' : 'bg-[#EF4444]'
+                  isBackendConnected ? 'bg-emerald-400' : 'bg-rose-400'
                 )}
               />
               <span
                 className={cn(
                   'relative inline-flex rounded-full h-2 w-2',
-                  isBackendConnected ? 'bg-[#22C55E]' : 'bg-[#EF4444]'
+                  isBackendConnected ? 'bg-emerald-500' : 'bg-rose-500'
                 )}
               />
             </span>
@@ -218,7 +218,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
                 opacity: open ? 1 : 0,
               }}
               transition={{ duration: 0.15 }}
-              className="text-[11px] text-[#F8FAFC] font-mono truncate"
+              className="text-[11px] text-slate-800 font-mono font-medium truncate"
             >
               API :8000
             </motion.span>
@@ -233,8 +233,8 @@ const SidebarContent: React.FC<SidebarProps> = ({
             className={cn(
               'text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase tracking-wider',
               isBackendConnected
-                ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/60'
-                : 'bg-red-950/80 text-red-300 border border-red-800/60'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-rose-50 text-rose-700 border border-rose-200'
             )}
           >
             {isBackendConnected ? 'HEALTHY' : 'OFFLINE'}
@@ -242,15 +242,15 @@ const SidebarContent: React.FC<SidebarProps> = ({
         </div>
 
         {/* Desktop Pin / Collapse Toggle Button */}
-        <div className="hidden md:flex justify-end pt-1">
+        <div className="hidden md:flex justify-end pt-0.5">
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className="flex items-center justify-center p-1 rounded text-slate-400 hover:text-white hover:bg-[#1D2935] transition-colors w-full"
+            className="flex items-center justify-center p-1 rounded-md text-slate-400 hover:text-slate-800 hover:bg-[#F1F3F5] transition-colors w-full cursor-pointer"
             title={open ? 'Collapse sidebar' : 'Expand sidebar'}
           >
             {open ? (
-              <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 hover:text-white">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-500 hover:text-slate-800">
                 <ChevronLeft className="w-3.5 h-3.5" />
                 <span>Collapse Rail</span>
               </div>

@@ -87,7 +87,7 @@ export const DesktopSidebar = ({
   return (
     <motion.aside
       className={cn(
-        'h-full px-3 py-4 hidden md:flex md:flex-col bg-[#111820] border-r border-[#1D2935] w-[270px] shrink-0 select-none z-30',
+        'sticky top-14 h-[calc(100vh-3.5rem)] px-3 py-4 hidden md:flex md:flex-col bg-white border-r border-[#DDE2E5] w-[270px] shrink-0 select-none z-30 shadow-[1px_0_3px_rgba(30,37,43,0.02)]',
         className
       )}
       animate={{
@@ -115,7 +115,7 @@ export const MobileSidebar = ({
   return (
     <div
       className={cn(
-        'h-12 px-4 flex flex-row md:hidden items-center justify-between bg-[#111820] border-b border-[#1D2935] w-full z-40'
+        'h-12 px-4 flex flex-row md:hidden items-center justify-between bg-white border-b border-[#DDE2E5] w-full z-40'
       )}
       {...props}
     >
@@ -124,7 +124,7 @@ export const MobileSidebar = ({
           type="button"
           aria-label="Open navigation menu"
           onClick={() => setOpen(!open)}
-          className="p-1 rounded text-slate-300 hover:text-white hover:bg-[#1D2935] transition-colors"
+          className="p-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -140,7 +140,7 @@ export const MobileSidebar = ({
               ease: 'easeInOut',
             }}
             className={cn(
-              'fixed h-full w-full inset-0 bg-[#111820] p-6 z-[100] flex flex-col justify-between overflow-y-auto',
+              'fixed h-full w-full inset-0 bg-white p-6 z-[100] flex flex-col justify-between overflow-y-auto text-slate-900 border-r border-[#DDE2E5]',
               className
             )}
           >
@@ -149,7 +149,7 @@ export const MobileSidebar = ({
                 type="button"
                 aria-label="Close navigation menu"
                 onClick={() => setOpen(false)}
-                className="p-1 rounded text-slate-400 hover:text-white hover:bg-[#1D2935] transition-colors"
+                className="p-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -189,10 +189,10 @@ export const SidebarLink = ({
       type="button"
       onClick={handleClick}
       className={cn(
-        'flex items-center justify-start gap-3 group/sidebar py-2.5 px-2.5 rounded-md transition-colors duration-150 w-full text-left cursor-pointer relative overflow-hidden',
+        'flex items-center justify-start gap-3 group/sidebar py-2 px-2.5 rounded-md transition-colors duration-150 w-full text-left cursor-pointer relative overflow-hidden',
         isActive
-          ? 'bg-[#1D2935] text-white font-medium border-l-2 border-[#3B82F6]'
-          : 'text-slate-400 hover:text-white hover:bg-[#273747]/60',
+          ? 'bg-[#EBF0F5] text-[#0F62FE] font-bold border-l-[3px] border-[#0F62FE] shadow-2xs'
+          : 'text-slate-600 hover:text-slate-900 hover:bg-[#F1F3F5]',
         className
       )}
       title={!open ? link.label : undefined}
@@ -220,10 +220,10 @@ export const SidebarLink = ({
           }}
           transition={{ duration: 0.15 }}
           className={cn(
-            'text-[9px] font-mono px-1.5 py-0.2 rounded font-medium shrink-0 ml-auto',
+            'text-[9px] font-mono px-1.5 py-0.2 rounded font-bold shrink-0 ml-auto',
             isActive
-              ? 'bg-[#3B82F6]/20 text-[#60A5FA] border border-[#3B82F6]/40'
-              : 'bg-[#1D2935] text-slate-400 border border-[#273747]'
+              ? 'bg-[#0F62FE]/15 text-[#004CCD] border border-[#0F62FE]/30'
+              : 'bg-[#F1F3F5] text-slate-500 border border-[#DDE2E5]'
           )}
         >
           {link.badge}

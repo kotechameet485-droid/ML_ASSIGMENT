@@ -57,7 +57,7 @@ export function App() {
       />
 
       {/* Main Body Shell */}
-      <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
+      <div className="flex flex-1 flex-col md:flex-row relative">
         {/* Navigation Sidebar */}
         <Sidebar
           currentTab={currentTab}
@@ -67,7 +67,7 @@ export function App() {
         />
 
         {/* Viewport Content Area */}
-        <main className="flex-1 min-w-0 overflow-y-auto bg-slate-50 text-slate-900">
+        <main className="flex-1 min-w-0 bg-slate-50 text-slate-900 min-h-[calc(100vh-3.5rem)]">
           {currentTab === 'overview' && (
             <OverviewView
               currentSubset={currentSubset}
