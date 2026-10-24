@@ -1,5 +1,6 @@
 import React from 'react';
-import { Database, ShieldCheck, AlertTriangle, School, ChevronRight, Activity } from 'lucide-react';
+import { Database, ShieldCheck, AlertTriangle, School } from 'lucide-react';
+import { EngineMindLogo } from './Logo';
 import type { HealthStatus } from '../types';
 import type { ViewTab } from './Sidebar';
 
@@ -12,72 +13,30 @@ interface HeaderProps {
   onNavigate?: (tab: ViewTab) => void;
 }
 
-interface WorkflowStep {
-  id: ViewTab;
-  label: string;
-  badge: string;
-}
-
-const WORKFLOW_STEPS: WorkflowStep[] = [
-  { id: 'datasets', label: 'Raw Ingestion', badge: '01' },
-  { id: 'explorer', label: 'Causal Features', badge: '02' },
-  { id: 'benchmarks', label: 'Model Lab', badge: '03' },
-  { id: 'prediction', label: 'RUL Inference', badge: '04' },
-  { id: 'explainability', label: 'TreeSHAP', badge: '05' },
-];
-
 export const Header: React.FC<HeaderProps> = ({
   currentSubset,
   onSubsetChange,
   health,
   isBackendConnected,
-  currentTab,
   onNavigate
 }) => {
   const isFd001 = currentSubset === 'FD001';
 
   return (
     <header className="w-full h-14 border-b border-[#DDE2E5] bg-white/95 backdrop-blur-md px-4 lg:px-6 flex items-center justify-between sticky top-0 z-50 select-none shadow-[0_2px_4px_rgba(0,0,0,0.04)] transition-all">
-      {/* Interactive Workflow Navigation Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-100 border border-slate-200/80 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 shrink-0">
-          <Activity className="w-3 h-3 text-[#0F62FE]" />
-          <span>Workflow</span>
-        </div>
-
-        <nav className="flex items-center gap-1 text-xs font-mono shrink-0">
-          {WORKFLOW_STEPS.map((step, idx) => {
-            const isActive = currentTab === step.id;
-            return (
-              <React.Fragment key={step.id}>
-                {idx > 0 && (
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0 mx-0.5" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => onNavigate?.(step.id)}
-                  className={`group flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all font-medium text-xs cursor-pointer ${
-                    isActive
-                      ? 'bg-[#0F62FE] text-white font-bold shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/90 active:scale-95'
-                  }`}
-                  title={`Navigate to ${step.label}`}
-                >
-                  <span
-                    className={`text-[9px] font-bold px-1 py-0.2 rounded-xs transition-colors ${
-                      isActive
-                        ? 'bg-white/20 text-white'
-                        : 'bg-slate-200 text-slate-600 group-hover:bg-slate-300'
-                    }`}
-                  >
-                    {step.badge}
-                  </span>
-                  <span>{step.label}</span>
-                </button>
-              </React.Fragment>
-            );
-          })}
-        </nav>
+      {/* Website Brand Logo */}
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={() => onNavigate?.('overview')}
+          className="flex items-center gap-1.5 py-1 px-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer group text-left"
+          title="EngineMind — Navigate to Executive Overview"
+        >
+          <EngineMindLogo className="h-8 w-auto transition-transform group-hover:scale-[1.02]" inverted={false} />
+          <span className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200 font-bold ml-1">
+            v2.4
+          </span>
+        </button>
       </div>
 
       {/* Realistic Interactive Controls & Status Indicators */}
