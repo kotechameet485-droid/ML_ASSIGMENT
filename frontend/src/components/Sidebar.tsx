@@ -17,7 +17,7 @@ import {
   SidebarLink,
 } from './ui/sidebar';
 import { useSidebar } from './ui/use-sidebar';
-import { EngineMindLogo } from './Logo';
+import { EngineMindRotor } from './Logo';
 import { motion } from 'motion/react';
 import { cn } from '../lib/utils';
 
@@ -97,7 +97,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
         <div className="h-14 flex items-center justify-between border-b border-[#DDE2E5] pb-2 px-1">
           <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
             <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded bg-[#F8F9FA] border border-[#DDE2E5] shadow-xs">
-              <EngineMindLogo className="h-5 w-5" inverted={false} />
+              <EngineMindRotor className="w-5 h-5" />
             </div>
 
             <motion.div

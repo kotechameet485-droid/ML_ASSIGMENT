@@ -1,6 +1,6 @@
 import React from 'react';
 import { Database, ShieldCheck, AlertTriangle, School } from 'lucide-react';
-import { EngineMindLogo } from './Logo';
+import { EngineMindRotor } from './Logo';
 import type { HealthStatus } from '../types';
 import type { ViewTab } from './Sidebar';
 
@@ -23,24 +23,43 @@ export const Header: React.FC<HeaderProps> = ({
   const isFd001 = currentSubset === 'FD001';
 
   return (
-    <header className="w-full h-14 border-b border-[#DDE2E5] bg-white/95 backdrop-blur-md px-4 lg:px-6 flex items-center justify-between sticky top-0 z-50 select-none shadow-[0_2px_4px_rgba(0,0,0,0.04)] transition-all">
-      {/* Website Brand Logo */}
-      <div className="flex items-center gap-2 shrink-0">
+    <header className="w-full h-14 border-b border-[#DDE2E5] bg-white/95 backdrop-blur-md px-4 lg:px-6 flex items-center justify-between sticky top-0 z-50 select-none shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all">
+      {/* Brand Identity & System Status */}
+      <div className="flex items-center gap-3 shrink-0">
         <button
           type="button"
           onClick={() => onNavigate?.('overview')}
-          className="flex items-center gap-1.5 py-1 px-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer group text-left"
+          className="flex items-center gap-2.5 py-1 px-1.5 rounded-lg hover:bg-slate-100/90 transition-colors cursor-pointer group text-left"
           title="EngineMind — Navigate to Executive Overview"
         >
-          <EngineMindLogo className="h-8 w-auto transition-transform group-hover:scale-[1.02]" inverted={false} />
-          <span className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200 font-bold ml-1">
-            v2.4
-          </span>
+          <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 shadow-xs border border-slate-700/60 group-hover:border-blue-500 transition-colors">
+            <EngineMindRotor className="w-5 h-5" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-bold text-sm tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+                EngineMind
+              </span>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                v2.4
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-slate-500 leading-none mt-1">
+              NASA C-MAPSS Intelligence
+            </span>
+          </div>
         </button>
+
+        <div className="h-5 w-px bg-slate-200 hidden md:block" />
+
+        <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-500 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Operational Intelligence</span>
+        </div>
       </div>
 
       {/* Realistic Interactive Controls & Status Indicators */}
-      <div className="flex items-center gap-2.5 shrink-0 pl-2">
+      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 pl-2">
         {/* Realistic Industrial Segmented Subset Selector */}
         <div className="inline-flex items-center bg-[#ECEFF2] p-1 rounded-lg border border-[#D5DCE2] shadow-inner gap-0.5">
           <div className="hidden sm:flex items-center gap-1 pl-1.5 pr-2 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500">
