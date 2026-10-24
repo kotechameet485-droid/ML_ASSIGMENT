@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isFd001 = currentSubset === 'FD001';
 
   return (
-    <header className="h-14 border-b border-[#DDE2E5] bg-white px-4 lg:px-6 flex items-center justify-between sticky top-0 z-50 select-none shadow-[0_1px_3px_rgba(30,37,43,0.05)]">
+    <header className="w-full h-14 border-b border-[#DDE2E5] bg-white/95 backdrop-blur-md px-4 lg:px-6 flex items-center justify-between sticky top-0 z-50 select-none shadow-[0_2px_4px_rgba(0,0,0,0.04)] transition-all">
       {/* Interactive Workflow Navigation Bar */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
         <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-100 border border-slate-200/80 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 shrink-0">
