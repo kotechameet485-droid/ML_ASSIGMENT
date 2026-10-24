@@ -52,6 +52,8 @@ export function App() {
         onSubsetChange={setCurrentSubset}
         health={health}
         isBackendConnected={isBackendConnected}
+        currentTab={currentTab}
+        onNavigate={setCurrentTab}
       />
 
       {/* Main Body Shell */}
