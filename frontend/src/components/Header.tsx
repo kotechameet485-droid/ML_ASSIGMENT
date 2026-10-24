@@ -124,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Model Readiness Tag */}
         {isFd001 ? (
           <div
-            className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-gradient-to-b from-white to-emerald-50/70 border border-emerald-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
+            className="hidden lg:flex items-center gap-2 px-2.5 py-1 bg-linear-to-b from-white to-emerald-50/70 border border-emerald-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
             title="Active Model: XGBoost Regressor tuned on FD001 (MAE: 13.94 cycles)"
           >
             <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 shrink-0">
@@ -137,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         ) : (
           <div
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-b from-white to-amber-50/70 border border-amber-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-linear-to-b from-white to-amber-50/70 border border-amber-300/80 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-xs font-mono"
             title={`Exploring multi-regime telemetry for ${currentSubset}`}
           >
             <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />

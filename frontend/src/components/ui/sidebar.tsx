@@ -87,7 +87,7 @@ export const DesktopSidebar = ({
   return (
     <motion.aside
       className={cn(
-        'sticky top-14 h-[calc(100vh-3.5rem)] px-3 py-4 hidden md:flex md:flex-col bg-white border-r border-[#DDE2E5] w-[270px] shrink-0 select-none z-30 shadow-[1px_0_3px_rgba(30,37,43,0.02)]',
+        'sticky top-14 h-[calc(100vh-3.5rem)] px-3 py-4 hidden md:flex md:flex-col bg-white border-r border-[#DDE2E5] w-67.5 shrink-0 select-none z-30 shadow-[1px_0_3px_rgba(30,37,43,0.02)]',
         className
       )}
       animate={{
@@ -140,7 +140,7 @@ export const MobileSidebar = ({
               ease: 'easeInOut',
             }}
             className={cn(
-              'fixed h-full w-full inset-0 bg-white p-6 z-[100] flex flex-col justify-between overflow-y-auto text-slate-900 border-r border-[#DDE2E5]',
+              'fixed h-full w-full inset-0 bg-white p-6 z-100 flex flex-col justify-between overflow-y-auto text-slate-900 border-r border-[#DDE2E5]',
               className
             )}
           >
