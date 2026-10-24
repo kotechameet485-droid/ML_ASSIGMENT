@@ -18,7 +18,6 @@ export const ErrorDiagnosticsView: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     Promise.all([
       fetchErrorSummary(),

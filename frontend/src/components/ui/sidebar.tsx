@@ -1,7 +1,8 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { SidebarContext, useSidebar } from './use-sidebar';
 
 export interface SidebarLinkItem {
   label: string;
@@ -11,22 +12,6 @@ export interface SidebarLinkItem {
   isActive?: boolean;
   onClick?: () => void;
 }
-
-interface SidebarContextProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  animate: boolean;
-}
-
-const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
-
-export const useSidebar = () => {
-  const context = useContext(SidebarContext);
-  if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider');
-  }
-  return context;
-};
 
 export const SidebarProvider = ({
   children,

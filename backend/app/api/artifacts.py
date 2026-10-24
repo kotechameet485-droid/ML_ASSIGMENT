@@ -38,7 +38,7 @@ def get_artifacts_status():
         ("SHAP Summary Plot", "results/figures/shap_summary.png", "Beeswarm plot of feature impact on RUL predictions"),
         ("Residual Distribution Plot", "results/figures/residual_distribution.png", "Error frequency distribution vs zero line"),
         ("Actual vs Predicted Plot", "results/figures/actual_vs_predicted.png", "Scatter plot against ideal 45-degree parity line"),
-        ("Degradation Trajectories Plot", "results/figures/sensor_degradation_trajectories.png", "Raw telemetry degradation patterns over cycle life")
+        ("Degradation Trajectories Plot", "results/figures/sensor_trends_representative_engines.png", "Raw telemetry degradation patterns over cycle life")
     ]
 
     results = []

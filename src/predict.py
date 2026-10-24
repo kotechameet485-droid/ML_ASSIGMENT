@@ -158,8 +158,8 @@ class EngineMindPredictor:
         bounded_preds = np.maximum(0.0, raw_preds)
         
         results = []
-        for idx, row in latest_fleet.iterrows():
-            rul = float(bounded_preds[idx])
+        for i, (_, row) in enumerate(latest_fleet.iterrows()):
+            rul = float(bounded_preds[i])
             prio = self.compute_maintenance_priority(rul)
             results.append({
                 "engine_id": int(row["engine_id"]),

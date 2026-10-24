@@ -44,15 +44,13 @@ def get_feature_importances(limit: int = 20):
 @router.get("/sensors", response_model=List[SensorMetadataItem])
 def get_sensor_catalog():
     """Returns physical specifications and sensor descriptions for all 21 sensors."""
-    constant_sensors = {"sensor_1", "sensor_5", "sensor_6", "sensor_10", "sensor_16", "sensor_18", "sensor_19"}
-    
     results = []
     for s_id, s_info in SENSOR_METADATA.items():
         results.append(SensorMetadataItem(
             sensor_id=s_id,
             description=s_info["desc"],
             unit=s_info["unit"],
-            constant_in_fd001=(s_id in constant_sensors)
+            constant_in_fd001=bool(s_info.get("constant_in_fd001", False))
         ))
 
     return results

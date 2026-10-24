@@ -126,16 +126,16 @@ def get_available_subsets(data_dir: Optional[str] = None) -> List[str]:
         return ["FD001"]
 
 
-def load_raw_dataset(
-    subset: str = "FD001",
-    data_dir: Optional[str] = None
+from functools import lru_cache
+
+
+@lru_cache(maxsize=8)
+def _load_raw_dataset_cached(
+    subset: str,
+    resolved_dir_str: str
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """
-    Loads train, test, and true RUL files for a given subset using whitespace-aware parsing.
-    Returns:
-        (train_df, test_df, rul_df)
-    """
-    resolved_dir = resolve_data_directory(data_dir)
+    """Internal LRU-cached loader parsing C-MAPSS whitespace-delimited files."""
+    resolved_dir = Path(resolved_dir_str)
     train_file = resolved_dir / f"train_{subset}.txt"
     test_file = resolved_dir / f"test_{subset}.txt"
     rul_file = resolved_dir / f"RUL_{subset}.txt"
@@ -144,7 +144,7 @@ def load_raw_dataset(
         if not fpath.exists():
             raise FileNotFoundError(f"Required dataset file not found: {fpath}")
 
-    logger.info(f"Loading {subset} datasets from {resolved_dir}...")
+    logger.info(f"Loading {subset} datasets from {resolved_dir} (caching in memory)...")
     
     # Whitespace-separated values without header
     train_df = pd.read_csv(train_file, sep=r"\s+", header=None, names=ALL_COLUMNS, engine="python")
@@ -152,6 +152,24 @@ def load_raw_dataset(
     rul_df = pd.read_csv(rul_file, sep=r"\s+", header=None, names=["true_rul"], engine="python")
 
     return train_df, test_df, rul_df
+
+
+def clear_dataset_cache() -> None:
+    """Clears the in-memory parsed dataset cache."""
+    _load_raw_dataset_cached.cache_clear()
+
+
+def load_raw_dataset(
+    subset: str = "FD001",
+    data_dir: Optional[str] = None
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Loads train, test, and true RUL files for a given subset using cached parsing.
+    Returns defensive deep copies so callers cannot mutate the cached DataFrames.
+    """
+    resolved_dir = resolve_data_directory(data_dir)
+    train_df, test_df, rul_df = _load_raw_dataset_cached(subset, str(resolved_dir))
+    return train_df.copy(), test_df.copy(), rul_df.copy()
 
 
 def validate_dataset(

@@ -15,8 +15,8 @@ import {
   Sidebar as AceternitySidebar,
   SidebarBody,
   SidebarLink,
-  useSidebar,
 } from './ui/sidebar';
+import { useSidebar } from './ui/use-sidebar';
 import { EngineMindLogo } from './Logo';
 import { motion } from 'motion/react';
 import { cn } from '../lib/utils';

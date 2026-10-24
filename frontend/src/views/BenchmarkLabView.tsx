@@ -23,7 +23,6 @@ export const BenchmarkLabView: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     Promise.all([
       fetchTestBenchmarks(),

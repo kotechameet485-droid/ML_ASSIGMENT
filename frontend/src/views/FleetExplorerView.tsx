@@ -58,12 +58,16 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
     };
   }, [currentSubset, partition]);
 
+  const handleEngineChange = (newId: number) => {
+    setSelectedEngineId(newId);
+    setPage(1);
+    setLoadingTelemetry(true);
+  };
+
   // Load telemetry when selected engine changes
   useEffect(() => {
     if (!selectedEngineId) return;
     let mounted = true;
-    setLoadingTelemetry(true);
-    setPage(1);
 
     fetchTelemetry(currentSubset, selectedEngineId, partition)
       .then((res) => {
@@ -200,7 +204,7 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
             </label>
             <select
               value={selectedEngineId}
-              onChange={(e) => setSelectedEngineId(Number(e.target.value))}
+              onChange={(e) => handleEngineChange(Number(e.target.value))}
               className="w-full bg-[#F8F9FA] border border-[#DDE2E5] rounded-sm px-3 py-1.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-[#0F62FE] font-semibold"
             >
               {engines.map((e) => (

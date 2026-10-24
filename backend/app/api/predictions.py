@@ -57,6 +57,9 @@ def predict_engine_rul(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+    if engine_id < 1:
+        raise HTTPException(status_code=404, detail=f"Invalid engine #{engine_id}. Engine IDs are 1-based positive integers.")
+
     eng_df = test_df[test_df["engine_id"] == engine_id]
     if eng_df.empty:
         raise HTTPException(status_code=404, detail=f"Engine #{engine_id} not found in {subset} test set.")
@@ -75,7 +78,7 @@ def predict_engine_rul(
     # Fetch ground-truth if available (strictly evaluation context)
     gt_rul = None
     residual = None
-    if engine_id <= len(rul_df):
+    if 1 <= engine_id <= len(rul_df):
         gt_rul = float(rul_df.iloc[engine_id - 1]["true_rul"])
         residual = round(pred_rul - gt_rul, 1)
 

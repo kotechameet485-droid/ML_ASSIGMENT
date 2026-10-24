@@ -14,6 +14,8 @@ WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.append(str(WORKSPACE_ROOT))
 
+import json
+from src.evaluate import compute_nasa_phm08_score
 from backend.app.schemas.models import ErrorEngineItem
 
 router = APIRouter(prefix="/api/errors", tags=["Errors"])
@@ -42,6 +44,19 @@ def get_error_summary() -> Dict[str, Any]:
     within_10 = int((abs_errors <= 10).sum())
     within_15 = int((abs_errors <= 15).sum())
     
+    # Read official NASA score from metrics artifact, fallback to dynamic computation
+    nasa_score = None
+    metrics_file = WORKSPACE_ROOT / "results" / "metrics" / "test_metrics.json"
+    if metrics_file.exists():
+        try:
+            with open(metrics_file, "r") as f:
+                data = json.load(f)
+                nasa_score = round(float(data.get("nasa_phm08_score", 0.0)), 2)
+        except Exception:
+            pass
+    if nasa_score is None:
+        nasa_score = round(compute_nasa_phm08_score(df["true_rul"].values, df["predicted_rul"].values), 2)
+
     return {
         "total_engines_evaluated": len(df),
         "mae": round(float(abs_errors.mean()), 2),
@@ -55,7 +70,7 @@ def get_error_summary() -> Dict[str, Any]:
         "within_5_cycles_pct": round(within_5 / len(df) * 100, 1),
         "within_10_cycles_pct": round(within_10 / len(df) * 100, 1),
         "within_15_cycles_pct": round(within_15 / len(df) * 100, 1),
-        "nasa_phm08_score": 760.5,
+        "nasa_phm08_score": nasa_score,
         "residual_definition": "Residual = Predicted RUL - True RUL. Positive = Overestimation (Late), Negative = Underestimation (Early/Conservative)."
     }
 

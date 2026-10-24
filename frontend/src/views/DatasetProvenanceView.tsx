@@ -25,7 +25,6 @@ export const DatasetProvenanceView: React.FC<DatasetProvenanceViewProps> = ({
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     Promise.all([
       fetchDatasets(),

@@ -39,8 +39,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
-    setError(null);
 
     Promise.all([
       fetchDatasetOverview(currentSubset),

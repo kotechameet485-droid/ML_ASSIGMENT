@@ -102,7 +102,7 @@ def list_engines(subset: str, partition: str = Query("test", pattern="^(train|te
             "max_cycle": int(row["max"]),
             "total_cycles": int(row["count"])
         }
-        if partition == "test" and eid <= len(rul_df):
+        if partition == "test" and 1 <= eid <= len(rul_df):
             item["ground_truth_rul"] = float(rul_df.iloc[eid - 1]["true_rul"])
         result.append(item)
         
@@ -118,6 +118,9 @@ def get_engine_telemetry(
     max_cycle: Optional[int] = None
 ):
     """Returns time-series telemetry records for a single engine."""
+    if engine_id < 1:
+        raise HTTPException(status_code=404, detail=f"Invalid engine #{engine_id}. Engine IDs are 1-based positive integers.")
+
     try:
         train_df, test_df, rul_df = load_raw_dataset(subset)
     except Exception as e:
@@ -138,7 +141,7 @@ def get_engine_telemetry(
     
     # Ground truth for test engine
     gt_rul = None
-    if partition == "test" and engine_id <= len(rul_df):
+    if partition == "test" and 1 <= engine_id <= len(rul_df):
         gt_rul = float(rul_df.iloc[engine_id - 1]["true_rul"])
         
     return {

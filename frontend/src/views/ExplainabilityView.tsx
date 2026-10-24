@@ -16,7 +16,6 @@ export const ExplainabilityView: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     fetchFeatureImportances(20)
       .then((feats) => {
