@@ -6,7 +6,7 @@ Provides feature importances, SHAP insights, and sensor physical metadata.
 import sys
 from pathlib import Path
 from typing import List, Dict, Any
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 import pandas as pd
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent.parent
@@ -20,7 +20,8 @@ router = APIRouter(prefix="/api/explainability", tags=["Explainability"])
 
 
 @router.get("/features", response_model=List[FeatureImportanceItem])
-def get_feature_importances(limit: int = 20):
+def get_feature_importances(limit: int = Query(20, ge=1, le=100)):
+
     """Returns top N global feature importances from the trained winning model."""
     fi_file = WORKSPACE_ROOT / "results" / "metrics" / "feature_importances.csv"
     if not fi_file.exists():

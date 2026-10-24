@@ -215,7 +215,12 @@ def _load_raw_dataset_cached(
     test_df = pd.read_csv(test_file, sep=r"\s+", header=None, names=ALL_COLUMNS, engine="python")
     rul_df = pd.read_csv(rul_file, sep=r"\s+", header=None, names=["true_rul"], engine="python")
 
+    float_cols = SENSOR_COLUMNS + SETTING_COLUMNS
+    train_df[float_cols] = train_df[float_cols].astype(np.float32)
+    test_df[float_cols] = test_df[float_cols].astype(np.float32)
+
     return train_df, test_df, rul_df
+
 
 
 def clear_dataset_cache() -> None:

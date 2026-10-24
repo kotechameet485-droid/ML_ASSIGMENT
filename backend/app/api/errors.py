@@ -135,7 +135,8 @@ def get_error_by_rul_brackets() -> List[Dict[str, Any]]:
             "mae": round(mae, 2),
             "rmse": round(rmse, 2),
             "mean_residual": round(mean_res, 2),
-            "tendency": "Underestimates (Safer)" if mean_res < 0 else "Overestimates (Aggressive)"
+            "tendency": "Underestimates (Early Bias)" if mean_res < 0 else "Overestimates (Late Bias)"
         })
+
         
     return results

@@ -14,8 +14,9 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.append(str(WORKSPACE_ROOT))
 
 from src.data_loader import load_raw_dataset, SUBSET_CATALOG
-from src.predict import EngineMindPredictor
+from src.predict import EngineMindPredictor, compute_maintenance_priority
 from backend.app.schemas.models import PredictionResult, FleetPriorityItem
+
 
 router = APIRouter(prefix="/api/predictions", tags=["Predictions"])
 
@@ -145,25 +146,22 @@ def get_fleet_priority_queue(
     
     for _, row in df.iterrows():
         p_rul = float(row["predicted_rul"])
-        if p_rul <= critical_threshold:
-            prio = "CRITICAL"
-            action = "Immediate Depot Overhaul Required"
-        elif p_rul <= warning_threshold:
-            prio = "WARNING"
-            action = "Schedule Maintenance in Next Flight Block"
-        else:
-            prio = "NOMINAL"
-            action = "Standard Fleet Monitoring"
+        prio_info = compute_maintenance_priority(
+            p_rul,
+            critical_thresh=critical_threshold,
+            warning_thresh=warning_threshold
+        )
             
         results.append(FleetPriorityItem(
             engine_id=int(row["engine_id"]),
             terminal_cycle=int(row["last_observed_cycle"]),
             predicted_rul=p_rul,
-            priority_category=prio,
-            recommended_action=action,
+            priority_category=prio_info["priority_level"],
+            recommended_action=prio_info["action"],
             ground_truth_rul=float(row["true_rul"]) if "true_rul" in row else None,
             residual=float(row["residual"]) if "residual" in row else None
         ))
+
         
     # Sort by predicted RUL ascending (highest priority first)
     results.sort(key=lambda x: x.predicted_rul)
