@@ -85,53 +85,58 @@ export const PredictionWorkspaceView: React.FC<PredictionWorkspaceViewProps> = (
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Inference Workspace</span>
-            <span>•</span>
-            <span className="font-mono font-medium text-slate-700">NASA C-MAPSS FD001</span>
-            <span>•</span>
-            <span className="text-emerald-700 font-medium">Model Active (Tuned XGBoost)</span>
+      {/* Top Telemetry & Control Bar from Stitch */}
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#737687] font-bold">
+                Diagnostic Suite / Benchmark RUL Inference & Evaluation
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]" />
+              <span className="text-[10px] font-mono text-[#15803D] font-bold uppercase">
+                {currentSubset === 'FD001' ? 'STANDBY READY' : 'PROTOCOL LOCKED'}
+              </span>
+            </div>
+            <h1 className="text-lg font-bold tracking-tight text-[#121D26]">
+              RUL Prediction Workspace
+            </h1>
+            <p className="text-xs text-[#5A6570]">
+              Run causal inference on test engine sensor trajectories using calibrated models. Inspect operational degradation and projected maintenance horizon.
+            </p>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            Remaining Useful Life (RUL) Inference Engine
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Predict Remaining Useful Life for blind test units using causal rolling dynamics up to the last recorded cycle.
-          </p>
-        </div>
 
-        {/* Model Support Alert for Non-FD001 */}
-        {currentSubset !== 'FD001' && (
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-md text-xs font-mono text-amber-800 shadow-xs shrink-0">
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>Switch to FD001 for verified inference</span>
+          <div className="flex items-center gap-2 self-start lg:self-auto shrink-0">
+            {currentSubset !== 'FD001' && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#FFFBEB] border border-[#FDE68A] rounded text-[11px] font-mono text-[#B45309]">
+                <AlertTriangle className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Switch to FD001</span>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Incompatible Subset Barrier (When not FD001) */}
       {currentSubset !== 'FD001' ? (
-        <div className="bg-white border border-slate-200 rounded-lg p-8 text-center space-y-3.5 shadow-xs max-w-xl mx-auto my-8">
-          <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 mx-auto flex items-center justify-center text-amber-600">
+        <div className="bg-white border border-[#DDE2E5] rounded-lg p-8 text-center space-y-3.5 shadow-[0_1px_2px_rgba(30,37,43,0.04)] max-w-xl mx-auto my-8">
+          <div className="w-10 h-10 rounded-full bg-[#FFFBEB] border border-[#FDE68A] mx-auto flex items-center justify-center text-[#D97706]">
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-sm font-bold text-slate-900">
+            <h3 className="text-sm font-bold text-[#121D26]">
               No Trained Model Compatible with {currentSubset}
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-[#5A6570] leading-relaxed">
               The verified predictive maintenance pipeline was trained and evaluated exclusively on <strong>NASA C-MAPSS FD001</strong> (Single Sea-Level Operating Condition, HPC wear). Subset <strong>{currentSubset}</strong> features 6 operating conditions and complex multi-mode faults.
             </p>
-            <p className="text-slate-400 text-[11px] font-mono">
+            <p className="text-[#737687] text-[11px] font-mono">
               Inference execution is locked to FD001 to prevent deceptive cross-regime predictions.
             </p>
           </div>
           <button
             onClick={() => onSelectSubset && onSelectSubset('FD001')}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-md transition-colors shadow-xs"
+            className="px-4 py-2 bg-[#15803D] hover:bg-[#166534] text-white font-semibold text-xs rounded transition-colors shadow-xs"
           >
             Switch to FD001 Protocol
           </button>

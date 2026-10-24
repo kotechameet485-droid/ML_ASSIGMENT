@@ -61,6 +61,7 @@ export function App() {
           currentTab={currentTab}
           onSelectTab={setCurrentTab}
           currentSubset={currentSubset}
+          isBackendConnected={isBackendConnected}
         />
 
         {/* Viewport Content Area */}

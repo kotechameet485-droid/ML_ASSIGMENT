@@ -117,32 +117,51 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      {/* Stitch Context Command Strip */}
+      <div className="bg-[#121D26] text-white px-4 py-2.5 rounded-sm flex flex-wrap items-center justify-between gap-3 font-mono text-xs shadow-xs border-b border-[#2A3742]">
+        <div className="flex items-center gap-3">
+          <span className="bg-[#0F62FE] text-white px-2 py-0.5 rounded-xs font-bold text-[10px] tracking-wider uppercase">
+            TELEMETRY-TRACE // V2.4
+          </span>
+          <span className="text-slate-300 text-[11px]">
+            SUBSET: <strong className="text-white">{currentSubset}</strong>
+          </span>
+          <span className="text-slate-500">•</span>
+          <span className="text-slate-300 text-[11px]">
+            UNIT: <strong className="text-white font-mono">#{selectedEngineId}</strong>
+          </span>
+        </div>
+        <div className="flex items-center gap-4 text-[11px] text-slate-400">
+          <span>PARTITION: <span className="text-emerald-400 font-semibold uppercase">{partition}</span></span>
+          <span className="text-slate-600">|</span>
+          <span>STATUS: <span className="text-sky-400 font-semibold uppercase">ACTIVE STREAM</span></span>
+        </div>
+      </div>
+
       {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#DDE2E5] pb-4">
         <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Telemetry Exploration</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 mb-1">
+            <span className="uppercase tracking-wider">Fleet Telemetry Explorer</span>
             <span>•</span>
-            <span className="font-mono font-medium text-slate-700">{currentSubset}</span>
-            <span>•</span>
-            <span>Engine #{selectedEngineId}</span>
+            <span className="font-semibold text-slate-800">{currentSubset} Partition</span>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-xl font-bold tracking-tight text-[#121D26] font-sans">
             Turbofan Time-Series Trajectory Explorer
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-600 mt-1">
             Inspect raw operational settings and high-pressure component degradation trajectories across all recorded flight cycles.
           </p>
         </div>
 
         {/* Partition Switcher & Export */}
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
+          <div className="flex items-center bg-[#F1F3F5] p-1 rounded-sm border border-[#DDE2E5] text-xs font-mono">
             <button
               onClick={() => setPartition('test')}
-              className={`px-3 py-1 rounded-md transition-all ${
+              className={`px-3 py-1 rounded-xs transition-all font-semibold ${
                 partition === 'test'
-                  ? 'bg-white text-slate-900 font-bold shadow-xs'
+                  ? 'bg-[#0F62FE] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -150,9 +169,9 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
             </button>
             <button
               onClick={() => setPartition('train')}
-              className={`px-3 py-1 rounded-md transition-all ${
+              className={`px-3 py-1 rounded-xs transition-all font-semibold ${
                 partition === 'train'
-                  ? 'bg-white text-slate-900 font-bold shadow-xs'
+                  ? 'bg-[#0F62FE] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -163,26 +182,26 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
           <button
             onClick={handleExportCSV}
             disabled={telemetryData.length === 0}
-            className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-700 font-medium transition-colors disabled:opacity-50 shadow-xs"
+            className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-[#F8F9FA] border border-[#DDE2E5] rounded-sm text-xs text-slate-700 font-mono font-medium transition-colors disabled:opacity-50 shadow-xs"
           >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
+            <Download className="w-3.5 h-3.5 text-slate-600" />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
       {/* Control Panel: Engine Selector & Quick Meta Bar */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
+      <div className="bg-white border border-[#DDE2E5] rounded-sm p-4 shadow-xs">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
           {/* Engine Selector */}
           <div className="lg:col-span-4 space-y-1">
-            <label className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block font-medium">
+            <label className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block font-semibold">
               Target Engine Unit
             </label>
             <select
               value={selectedEngineId}
               onChange={(e) => setSelectedEngineId(Number(e.target.value))}
-              className="w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-sky-500 font-semibold"
+              className="w-full bg-[#F8F9FA] border border-[#DDE2E5] rounded-sm px-3 py-1.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-[#0F62FE] font-semibold"
             >
               {engines.map((e) => (
                 <option key={e.engine_id} value={e.engine_id}>
@@ -194,32 +213,32 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
 
           {/* Engine Quick Metrics Strip */}
           {selectedEngineMeta && (
-            <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 border border-slate-200/80 rounded-md p-2.5 text-xs font-mono">
+            <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[#F8F9FA] border border-[#DDE2E5] rounded-sm p-2.5 text-xs font-mono">
               <div>
-                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Cycles:</span>
-                <span className="text-slate-900 font-bold text-sm">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Total Cycles:</span>
+                <span className="text-[#121D26] font-bold text-sm font-mono">
                   {selectedEngineMeta.total_cycles}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Range:</span>
-                <span className="text-slate-700">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Recorded Range:</span>
+                <span className="text-slate-700 font-mono">
                   {selectedEngineMeta.min_cycle} → {selectedEngineMeta.max_cycle}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Partition:</span>
-                <span className="text-sky-700 font-semibold uppercase">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Dataset Partition:</span>
+                <span className="text-[#0F62FE] font-bold uppercase">
                   {partition}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] font-semibold uppercase">
-                  {partition === 'test' ? 'True RUL:' : 'Lifetime:'}
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">
+                  {partition === 'test' ? 'True Ground RUL:' : 'End-of-Life:'}
                 </span>
                 <span
-                  className={`font-bold ${
-                    partition === 'test' ? 'text-amber-700' : 'text-slate-800'
+                  className={`font-bold font-mono ${
+                    partition === 'test' ? 'text-amber-800' : 'text-slate-800'
                   }`}
                 >
                   {partition === 'test'
@@ -235,10 +254,10 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
       </div>
 
       {/* Sensor Channel Filter Chips */}
-      <div className="bg-white border border-slate-200 rounded-lg p-3.5 space-y-2 shadow-xs">
-        <div className="text-[11px] font-mono text-slate-500 uppercase tracking-wider flex items-center justify-between font-medium">
-          <span>Active Channels ({selectedSensors.length}/4 selected):</span>
-          <span className="text-slate-400 text-[10px]">Click channel to toggle visibility</span>
+      <div className="bg-white border border-[#DDE2E5] rounded-sm p-3.5 space-y-2 shadow-xs">
+        <div className="text-[11px] font-mono text-slate-500 uppercase tracking-wider flex items-center justify-between font-semibold">
+          <span>Active Sensor Channels ({selectedSensors.length}/4 selected):</span>
+          <span className="text-slate-400 text-[10px]">Click channel pill to toggle visibility</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {AVAILABLE_SENSORS.map((s) => {
@@ -247,10 +266,10 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
               <button
                 key={s.id}
                 onClick={() => toggleSensor(s.id)}
-                className={`px-2.5 py-1 rounded-md text-xs font-mono flex items-center gap-1.5 border transition-all ${
+                className={`px-2.5 py-1 rounded-sm text-xs font-mono flex items-center gap-1.5 border transition-all ${
                   isSelected
-                    ? 'bg-sky-50 text-sky-900 font-semibold border-sky-300 shadow-xs'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-[#EBF0F5] text-[#004CCD] font-bold border-[#0F62FE] shadow-xs'
+                    : 'bg-[#F8F9FA] text-slate-600 border-[#DDE2E5] hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <span
@@ -266,61 +285,63 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
 
       {/* Telemetry Chart Component */}
       {loadingTelemetry ? (
-        <div className="h-80 flex items-center justify-center bg-white border border-slate-200 rounded-lg shadow-xs">
+        <div className="h-80 flex items-center justify-center bg-white border border-[#DDE2E5] rounded-sm shadow-xs">
           <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
-            <Activity className="w-4 h-4 animate-spin text-sky-600" />
+            <Activity className="w-4 h-4 animate-spin text-[#0F62FE]" />
             <span>Streaming multi-sensor telemetry records...</span>
           </div>
         </div>
       ) : (
-        <TelemetryChart data={telemetryData} sensors={activeSensors} height={340} />
+        <div className="bg-white border border-[#DDE2E5] rounded-sm p-4 shadow-xs">
+          <TelemetryChart data={telemetryData} sensors={activeSensors} height={340} />
+        </div>
       )}
 
       {/* Telemetry Data Table */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 space-y-3 shadow-xs">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+      <div className="bg-white border border-[#DDE2E5] rounded-sm p-4 space-y-3 shadow-xs">
+        <div className="flex items-center justify-between border-b border-[#DDE2E5] pb-2.5">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-sky-600" />
-            <h3 className="text-xs font-mono font-bold uppercase text-slate-800">
+            <Database className="w-4 h-4 text-[#0F62FE]" />
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#121D26]">
               Raw Operational Telemetry (Engine #{selectedEngineId})
             </h3>
           </div>
-          <div className="text-xs font-mono text-slate-400">
+          <div className="text-xs font-mono text-slate-500">
             Records {(page - 1) * rowsPerPage + 1}–{Math.min(page * rowsPerPage, telemetryData.length)} of {telemetryData.length}
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] border-b border-slate-200">
+            <thead className="bg-[#F8F9FA] text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-[#DDE2E5]">
               <tr>
-                <th className="py-2 px-3">Cycle</th>
-                <th className="py-2 px-3">Altitude (Set 1)</th>
-                <th className="py-2 px-3">Mach (Set 2)</th>
-                <th className="py-2 px-3">TRA (Set 3)</th>
-                <th className="py-2 px-3 text-sky-700">T50 (Sens 4)</th>
-                <th className="py-2 px-3 text-amber-700">Ps30 (Sens 11)</th>
-                <th className="py-2 px-3 text-emerald-700">BPR (Sens 15)</th>
-                <th className="py-2 px-3 text-purple-700">Nc (Sens 9)</th>
+                <th className="py-2.5 px-3">Cycle</th>
+                <th className="py-2.5 px-3">Altitude (Set 1)</th>
+                <th className="py-2.5 px-3">Mach (Set 2)</th>
+                <th className="py-2.5 px-3">TRA (Set 3)</th>
+                <th className="py-2.5 px-3 text-[#004CCD]">T50 (Sens 4)</th>
+                <th className="py-2.5 px-3 text-amber-800">Ps30 (Sens 11)</th>
+                <th className="py-2.5 px-3 text-emerald-800">BPR (Sens 15)</th>
+                <th className="py-2.5 px-3 text-purple-800">Nc (Sens 9)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-[#EBF0F5] text-slate-700">
               {currentTableRows.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-1.5 px-3 font-bold text-slate-900">C{r.cycle}</td>
-                  <td className="py-1.5 px-3">{Number(r.setting_1).toFixed(4)}</td>
-                  <td className="py-1.5 px-3">{Number(r.setting_2).toFixed(4)}</td>
-                  <td className="py-1.5 px-3">{Number(r.setting_3).toFixed(1)}</td>
-                  <td className="py-1.5 px-3 text-sky-800 font-mono-numbers font-semibold">
+                <tr key={i} className="hover:bg-[#F8F9FA] transition-colors">
+                  <td className="py-2 px-3 font-bold text-[#121D26] font-mono">C{r.cycle}</td>
+                  <td className="py-2 px-3 font-mono">{Number(r.setting_1).toFixed(4)}</td>
+                  <td className="py-2 px-3 font-mono">{Number(r.setting_2).toFixed(4)}</td>
+                  <td className="py-2 px-3 font-mono">{Number(r.setting_3).toFixed(1)}</td>
+                  <td className="py-2 px-3 text-[#004CCD] font-mono font-bold">
                     {r.sensor_4 ? Number(r.sensor_4).toFixed(2) : '-'}
                   </td>
-                  <td className="py-1.5 px-3 text-amber-800 font-mono-numbers font-semibold">
+                  <td className="py-2 px-3 text-amber-800 font-mono font-bold">
                     {r.sensor_11 ? Number(r.sensor_11).toFixed(2) : '-'}
                   </td>
-                  <td className="py-1.5 px-3 text-emerald-800 font-mono-numbers font-semibold">
+                  <td className="py-2 px-3 text-emerald-800 font-mono font-bold">
                     {r.sensor_15 ? Number(r.sensor_15).toFixed(4) : '-'}
                   </td>
-                  <td className="py-1.5 px-3 text-purple-800 font-mono-numbers font-semibold">
+                  <td className="py-2 px-3 text-purple-800 font-mono font-bold">
                     {r.sensor_9 ? Number(r.sensor_9).toFixed(2) : '-'}
                   </td>
                 </tr>
@@ -330,22 +351,22 @@ export const FleetExplorerView: React.FC<FleetExplorerViewProps> = ({ currentSub
         </div>
 
         {/* Table Pagination */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-          <span className="text-[11px] font-mono text-slate-400">
+        <div className="flex items-center justify-between pt-2 border-t border-[#DDE2E5]">
+          <span className="text-[11px] font-mono text-slate-500">
             Page {page} of {totalPages || 1}
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 font-mono">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="p-1 rounded bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
+              className="p-1 rounded-xs bg-[#F8F9FA] border border-[#DDE2E5] text-slate-700 hover:text-slate-900 disabled:opacity-40"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages || totalPages === 0}
-              className="p-1 rounded bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
+              className="p-1 rounded-xs bg-[#F8F9FA] border border-[#DDE2E5] text-slate-700 hover:text-slate-900 disabled:opacity-40"
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>

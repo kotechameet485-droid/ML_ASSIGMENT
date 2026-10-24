@@ -63,35 +63,49 @@ export const DatasetProvenanceView: React.FC<DatasetProvenanceViewProps> = ({
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Governance & Lineage</span>
-            <span>•</span>
-            <span className="font-mono font-medium text-slate-700">NASA C-MAPSS Simulation Benchmarks</span>
-            <span>•</span>
-            <span>FD001–FD004</span>
+      {/* Top Context Header Strip from Stitch */}
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#0F62FE] font-bold">
+                Diagnostic Dataset Registry
+              </span>
+              <span className="text-[#C3C6D8] font-mono">/</span>
+              <span className="text-[10px] font-mono text-[#5A6570]">
+                {currentSubset}_TRAIN_MATRIX
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#F0FDF4] text-[#15803D] font-bold border border-[#BBF7D0]">
+                NASA Ames C-MAPSS
+              </span>
+            </div>
+            <h1 className="text-lg font-bold tracking-tight text-[#121D26]">
+              Dataset Explorer & Pipeline Provenance
+            </h1>
+            <p className="text-xs text-[#5A6570] mt-0.5">
+              Inspect physical channel variance, run-to-failure cycle distributions, and partition schemas across NASA Ames C-MAPSS turbofan benchmarks.
+            </p>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            Dataset Architecture & Pipeline Artifact Verification
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Full audit of raw turbofan flight datasets, pipeline artifacts, cross-validation logs, and model serialization records.
-          </p>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#F8F9FA] border border-[#DDE2E5] text-[#5A6570] text-[11px] font-mono">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#15803D]" />
+              <span>Zero-Missing Verified</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* C-MAPSS Subsets Matrix Table */}
-      <div className="bg-white border border-slate-200 rounded-lg p-5 space-y-4 shadow-xs">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-5 space-y-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)]">
+        <div className="flex items-center justify-between border-b border-[#F1F3F5] pb-3">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-sky-600" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+            <Database className="w-4 h-4 text-[#0F62FE]" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#121D26]">
               NASA C-MAPSS Benchmark Subsets Matrix
             </h3>
           </div>
-          <span className="text-[11px] font-mono text-slate-400">
+          <span className="text-[11px] font-mono text-[#737687]">
             FD001–FD004 Specifications
           </span>
         </div>

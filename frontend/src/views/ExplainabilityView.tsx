@@ -48,22 +48,42 @@ export const ExplainabilityView: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Model Diagnostics</span>
-            <span>•</span>
-            <span className="font-mono font-medium text-slate-700">SHAP & Tree Gain Attribution</span>
-            <span>•</span>
-            <span>Tuned XGBoost (FD001)</span>
+      {/* Command Strip / Header from Stitch */}
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] space-y-3">
+        <div className="flex flex-col gap-1 w-full">
+          <div className="flex items-center gap-2 text-[#0F62FE] text-[10px] font-mono uppercase tracking-wider font-bold">
+            <BrainCircuit className="w-4 h-4 text-[#0F62FE]" />
+            <span>Interpretability Suite • TreeExplainer Kernel v0.42</span>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            Sensor Intelligence & Explainability Workspace
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Inspect which telemetry signatures govern model predictions. High predictive gain highlights leading indicators of turbofan gas-path deterioration.
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3">
+            <div>
+              <h1 className="text-lg font-bold tracking-tight text-[#121D26]">
+                Model Explainability & Feature Attribution
+              </h1>
+              <p className="text-xs text-[#5A6570] mt-0.5">
+                Global TreeSHAP feature importance, dependency trends, and local breakdown across C-MAPSS FD001 sensor telemetry.
+              </p>
+            </div>
+            <div className="hidden xl:flex items-center gap-3 text-[#737687] text-[11px] font-mono shrink-0">
+              <span>Evaluated Engines: <strong className="text-[#121D26]">100</strong></span>
+              <span>Sample Slices: <strong className="text-[#121D26]">20,631</strong></span>
+              <span>Additivity Error: <strong className="text-[#15803D]">&lt; 1e-6 cycles</strong></span>
+            </div>
+          </div>
+        </div>
+
+        {/* Interpretability Caveat Bar from Stitch */}
+        <div className="flex items-center justify-between px-3 py-1.5 rounded bg-[#F8F9FA] border border-[#DDE2E5] text-[#5A6570] text-[11px]">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-[#D97706] shrink-0" />
+            <span>
+              <strong className="text-[#121D26]">Interpretability Notice:</strong> Attribution models mathematical feature contribution to RUL prediction; physical causal mechanisms require domain engineering validation.
+            </span>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5 text-[#737687] font-mono text-[10px] shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]" />
+            <span>TreeSHAP v0.42 Certified</span>
+          </div>
         </div>
       </div>
 

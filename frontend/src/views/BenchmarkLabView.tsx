@@ -68,50 +68,52 @@ export const BenchmarkLabView: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Model Evaluation</span>
-            <span>•</span>
-            <span className="font-mono font-medium text-slate-700">NASA C-MAPSS FD001</span>
-            <span>•</span>
-            <span>100 Test Engines</span>
+      {/* Top Command & Benchmark Context Bar from Stitch */}
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] space-y-3">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+          <div className="flex flex-col gap-1 max-w-4xl">
+            <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#0F62FE] text-white font-bold">
+                Evaluation Workbench
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#E4EFFC] text-[#0F62FE] border border-[#C3C6D8] font-semibold">
+                Dataset: NASA C-MAPSS FD001
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#F8F9FA] text-[#5A6570] border border-[#DDE2E5] font-semibold">
+                Run: EXP-2024-09-A
+              </span>
+            </div>
+            <h1 className="text-lg font-bold tracking-tight text-[#121D26]">
+              Model Laboratory — Algorithm Comparison & Evaluation
+            </h1>
+            <p className="text-xs text-[#5A6570]">
+              Rigorous benchmark comparing Ridge Regression, Random Forest, and XGBoost against baseline on identical NASA C-MAPSS FD001 train/test splits (100 training units, 100 blind test units).
+            </p>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            Algorithm Comparison & Model Selection Lab
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Rigorous head-to-head evaluation of candidate ML algorithms on the identical <strong>NASA C-MAPSS FD001</strong> dataset (100 training engines, 100 blind test engines).
-          </p>
-        </div>
-      </div>
 
-      {/* Dataset Scope Integrity Banner */}
-      <div className="bg-white border border-slate-200 rounded-lg p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>
-            <strong>Experimental Grounding:</strong> Benchmarks are evaluated on FD001 (Sea Level Static, HPC Wear) using identical piecewise RUL thresholding (125 cycles).
-          </span>
+          {/* Target Transform Badge from Stitch */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-[#F8F9FA] border border-[#DDE2E5] text-[#5A6570] shrink-0">
+            <ShieldCheck className="w-4 h-4 text-[#0F62FE]" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-[9px] font-mono uppercase text-[#737687] font-bold">Target Formulation</span>
+              <span className="text-[11px] font-mono text-[#121D26] font-semibold">Piecewise-Linear RUL (Capped 125 cyc)</span>
+            </div>
+          </div>
         </div>
-        <span className="px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-mono rounded font-bold uppercase shrink-0">
-          FD001 Certified
-        </span>
       </div>
 
       {/* DEDICATED HEAD-TO-HEAD COMPARISON ARENA */}
-      <div className="bg-white border border-slate-200 rounded-lg p-5 space-y-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-3">
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-5 space-y-5 shadow-[0_1px_2px_rgba(30,37,43,0.04)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F1F3F5] pb-3">
           <div>
             <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-sky-600" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+              <Scale className="w-4 h-4 text-[#0F62FE]" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#121D26]">
                 Head-to-Head Algorithm Comparison Arena
               </h3>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Select any two algorithms to compare side by side across cross-validation and blind test metrics.
+            <p className="text-xs text-[#5A6570] mt-0.5">
+              Compare any two candidate algorithms side by side across 5-fold cross-validation and official blind test metrics.
             </p>
           </div>
 

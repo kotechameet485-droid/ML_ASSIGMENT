@@ -61,77 +61,121 @@ export const ErrorDiagnosticsView: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <span>Model Diagnostics</span>
-            <span>•</span>
-            <span className="font-mono font-medium text-slate-700">NASA C-MAPSS FD001</span>
-            <span>•</span>
-            <span>100 Test Units Residual Audit</span>
+      {/* Top Context Header Bar from Stitch */}
+      <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] space-y-3">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="px-1.5 py-0.5 rounded bg-[#E4EFFC] text-[#0F62FE] font-mono text-[10px] font-bold uppercase border border-[#C3C6D8]">
+                FD001 EVALUATION PIPELINE
+              </span>
+              <span className="text-[10px] font-mono text-[#737687]">ID: RUN-2024-XGB-8841</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]" />
+              <span className="text-[10px] font-mono text-[#15803D] font-bold">CONVERGED</span>
+            </div>
+            <h1 className="text-lg font-bold tracking-tight text-[#121D26]">
+              Error Analysis & Diagnostic Suite
+            </h1>
+            <p className="text-xs text-[#5A6570] mt-0.5">
+              Residual evaluation (<span className="font-mono text-[#0F62FE] font-semibold">e = RUL<sub>pred</sub> - RUL<sub>true</sub></span>), NASA asymmetric scoring degradation, and root-cause failure mode inspection on 100 test turbofans.
+            </p>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            Model Error Diagnostics & Residual Audit
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Complete residual audit across all 100 test turbofan engines. Detailed analysis of early vs late predictions and NASA asymmetric penalty mechanics.
-          </p>
+
+          {/* Controls Row */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <div className="flex items-center bg-[#F8F9FA] border border-[#DDE2E5] rounded px-2.5 py-1 text-[#121D26]">
+              <span className="text-[10px] font-mono text-[#737687] uppercase font-bold mr-1.5">Model:</span>
+              <span className="text-[11px] font-mono font-semibold text-[#0F62FE]">XGBoost Regressor (v1.4)</span>
+            </div>
+            <div className="flex items-center bg-[#F8F9FA] border border-[#DDE2E5] rounded px-2.5 py-1 text-[#121D26]">
+              <span className="text-[10px] font-mono text-[#737687] uppercase font-bold mr-1.5">Dataset:</span>
+              <span className="text-[11px] font-mono">FD001 Test [100 Units]</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Summary KPI Cards */}
+      {/* Summary KPI Cards from Stitch */}
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold">
-              Mean Absolute Error
-            </span>
-            <div className="text-2xl font-bold font-mono-numbers text-slate-900 mt-1">
-              {summary.mae.toFixed(2)}
-              <span className="text-xs font-mono text-slate-400 ml-1.5 font-normal">cycles</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737687] font-bold">
+                  Mean Absolute Error
+                </span>
+                <div className="text-2xl font-bold font-mono-numbers text-[#121D26] mt-1">
+                  {summary.mae.toFixed(2)}
+                  <span className="text-xs font-mono text-[#5A6570] ml-1.5 font-normal">cycles</span>
+                </div>
+              </div>
+              <span className="px-1.5 py-0.5 rounded bg-[#F0FDF4] text-[#15803D] text-[10px] font-mono font-bold border border-[#BBF7D0]">
+                OPTIMAL
+              </span>
             </div>
-            <div className="text-[11px] font-mono text-slate-500 mt-2">
+            <div className="text-[11px] font-mono text-[#5A6570] mt-3 pt-2 border-t border-[#F1F3F5]">
               Median Absolute Error: {summary.median_absolute_error.toFixed(1)}c
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold">
-              Root Mean Squared Error
-            </span>
-            <div className="text-2xl font-bold font-mono-numbers text-slate-900 mt-1">
-              {summary.rmse.toFixed(2)}
-              <span className="text-xs font-mono text-slate-400 ml-1.5 font-normal">cycles</span>
+          <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737687] font-bold">
+                  Root Mean Squared Error
+                </span>
+                <div className="text-2xl font-bold font-mono-numbers text-[#121D26] mt-1">
+                  {summary.rmse.toFixed(2)}
+                  <span className="text-xs font-mono text-[#5A6570] ml-1.5 font-normal">cycles</span>
+                </div>
+              </div>
+              <span className="px-1.5 py-0.5 rounded bg-[#E4EFFC] text-[#0F62FE] text-[10px] font-mono font-bold border border-[#C3C6D8]">
+                L2 NORM
+              </span>
             </div>
-            <div className="text-[11px] font-mono text-slate-500 mt-2">
-              Max Absolute Error: {summary.max_absolute_error.toFixed(1)}c
-            </div>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold">
-              Over vs Under-Estimations
-            </span>
-            <div className="text-xl font-bold font-mono-numbers text-slate-900 mt-1 flex items-baseline gap-2">
-              <span className="text-red-700">{summary.overestimated_count} Late</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-emerald-700">{summary.underestimated_count} Early</span>
-            </div>
-            <div className="text-[11px] font-mono text-emerald-700 mt-2 font-medium">
-              Mean Residual: {summary.mean_residual.toFixed(2)} (Conservative)
+            <div className="text-[11px] font-mono text-[#5A6570] mt-3 pt-2 border-t border-[#F1F3F5]">
+              Max Residual Error: {summary.max_absolute_error.toFixed(1)}c
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold">
-              NASA PHM08 Penalty Score
-            </span>
-            <div className="text-2xl font-bold font-mono-numbers text-amber-700 mt-1">
-              {summary.nasa_phm08_score.toFixed(1)}
+          <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737687] font-bold">
+                  Asymmetric Bias (Safe vs Late)
+                </span>
+                <div className="text-xl font-bold font-mono-numbers text-[#121D26] mt-1 flex items-baseline gap-2">
+                  <span className="text-emerald-700">{summary.underestimated_count} Early</span>
+                  <span className="text-slate-300">/</span>
+                  <span className="text-red-700">{summary.overestimated_count} Late</span>
+                </div>
+              </div>
+              <span className="px-1.5 py-0.5 rounded bg-[#F0FDF4] text-[#15803D] text-[10px] font-mono font-bold border border-[#BBF7D0]">
+                SAFE BIAS
+              </span>
             </div>
-            <div className="text-[11px] font-mono text-slate-500 mt-2">
-              Within ±15 cycles: {summary.within_15_cycles_pct}% of engines
+            <div className="text-[11px] font-mono text-[#15803D] mt-3 pt-2 border-t border-[#F1F3F5] font-semibold flex items-center justify-between">
+              <span>Mean Residual: {summary.mean_residual.toFixed(2)}c</span>
+              <span>(Conservative)</span>
+            </div>
+          </div>
+
+          <div className="bg-white border border-[#DDE2E5] rounded-lg p-4 shadow-[0_1px_2px_rgba(30,37,43,0.04)] flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737687] font-bold">
+                  NASA PHM08 Penalty Score
+                </span>
+                <div className="text-2xl font-bold font-mono-numbers text-amber-700 mt-1">
+                  {summary.nasa_phm08_score.toFixed(1)}
+                </div>
+              </div>
+              <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] text-amber-800 text-[10px] font-mono font-bold border border-[#FDE68A]">
+                ASYMMETRIC
+              </span>
+            </div>
+            <div className="text-[11px] font-mono text-[#5A6570] mt-3 pt-2 border-t border-[#F1F3F5]">
+              Within ±15 cycles: <span className="font-bold text-[#121D26]">{summary.within_15_cycles_pct}%</span> of engines
             </div>
           </div>
         </div>
